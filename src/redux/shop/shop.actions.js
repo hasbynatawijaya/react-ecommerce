@@ -31,3 +31,28 @@ export const addCategoryStart = (data) => ({
   type: ShopActionTypes.ADD_CATEGORY_START,
   payload: data,
 });
+
+export const editCategoryStart = (data) => ({
+  type: ShopActionTypes.EDIT_CATEGORY_START,
+  payload: data,
+});
+
+export const deleteCategoryStart = (categoryId) => ({
+  type: ShopActionTypes.DELETE_CATEGORY_START,
+  payload: categoryId,
+});
+
+export const fetchCollectionByIdStart = (collectionId) => ({
+  type: ShopActionTypes.FETCH_COLLECTION_BY_ID_START,
+  payload: collectionId,
+});
+
+export const fetchCollectionByIdSuccess = (collection) => ({
+  type: ShopActionTypes.FETCH_COLLECTION_BY_ID_SUCCESS,
+  payload: collection,
+});
+
+export const fetchCollectionByIdFailure = (errorMessage) => ({
+  type: ShopActionTypes.FETCH_COLLECTION_BY_ID_FAILURE,
+  payload: errorMessage,
+});

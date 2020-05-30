@@ -32,13 +32,15 @@ export const selectCollectionsCategory = createSelector(
   [selectCollections],
   (collections) =>
     collections
-      ? Object.keys(collections).map((key) => {
-          console.log(collections);
-          return {
-            id: collections[key].id,
-            title: collections[key].title,
-            imageUrl: collections[key].imageUrl,
-          };
-        })
+      ? Object.keys(collections).map((key) => ({
+          id: collections[key].id,
+          title: collections[key].title,
+          imageUrl: collections[key].imageUrl,
+        }))
       : []
+);
+
+export const selectCollectionById = createSelector(
+  [selectShop],
+  (shop) => shop.collectionById
 );

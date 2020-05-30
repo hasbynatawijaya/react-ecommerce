@@ -4,14 +4,15 @@ import FormInput from "../form-input/form-input.component";
 import FormUpload from "../form-upload/form-upload.component";
 import CustomButton from "../custom-button/custom-button.component";
 
-import { AddCategoryContainer } from "./add-category.styles";
+import { EditCategoryContainer } from "./edit-category.styles";
 
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
-import { addCategoryStart } from "../../redux/shop/shop.actions";
+import { editCategoryStart } from "../../redux/shop/shop.actions";
+import { selectCollectionById } from "../../redux/shop/shop.selectors";
 
-class AddCategory extends Component {
+class EditCategory extends Component {
   constructor(props) {
     super(props);
 
@@ -20,6 +21,15 @@ class AddCategory extends Component {
       imageAsFile: "",
       imageUrl: null,
     };
+  }
+
+  componentDidUpdate(previousProps, previousState) {
+    if (previousProps.collectionById !== this.props.collectionById) {
+      this.setState({
+        category: this.props.collectionById.title,
+        imageUrl: this.props.collectionById.imageUrl,
+      });
+    }
   }
 
   handleImageAsFile = (e) => {
@@ -39,22 +49,22 @@ class AddCategory extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { addCategoryStart } = this.props;
-    const { category, imageAsFile } = this.state;
+    const {
+      editCategoryStart,
+      collectionById: { categoryId },
+    } = this.props;
+    const { category, imageAsFile, imageUrl } = this.state;
 
-    addCategoryStart({ category, imageAsFile });
+    editCategoryStart({ categoryId, category, imageAsFile, imageUrl });
   };
 
   render() {
     const { category, imageUrl } = this.state;
 
     return (
-      <AddCategoryContainer>
+      <EditCategoryContainer>
         <form onSubmit={this.handleSubmit}>
-          <FormUpload
-            onChange={this.handleImageAsFile}
-            imageUrl={imageUrl}
-          ></FormUpload>
+          <FormUpload imageUrl={imageUrl} onChange={this.handleImageAsFile} />
           <FormInput
             name="category"
             type="text"
@@ -63,15 +73,20 @@ class AddCategory extends Component {
             label="Nama Produk"
             required
           />
+
           <CustomButton type="submit"> Tambah Kategori </CustomButton>
         </form>
-      </AddCategoryContainer>
+      </EditCategoryContainer>
     );
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  addCategoryStart: (data) => dispatch(addCategoryStart(data)),
+const mapStateToProps = createStructuredSelector({
+  collectionById: selectCollectionById,
 });
 
-export default connect(null, mapDispatchToProps)(AddCategory);
+const mapDispatchToProps = (dispatch) => ({
+  editCategoryStart: (data) => dispatch(editCategoryStart(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditCategory);

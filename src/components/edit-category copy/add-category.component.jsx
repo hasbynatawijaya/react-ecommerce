@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-
 import FormInput from "../form-input/form-input.component";
-import FormUpload from "../form-upload/form-upload.component";
 import CustomButton from "../custom-button/custom-button.component";
 
 import { AddCategoryContainer } from "./add-category.styles";
@@ -51,18 +49,27 @@ class AddCategory extends Component {
     return (
       <AddCategoryContainer>
         <form onSubmit={this.handleSubmit}>
-          <FormUpload
-            onChange={this.handleImageAsFile}
-            imageUrl={imageUrl}
-          ></FormUpload>
+          <div
+            style={{
+              width: "400px",
+              height: "280px",
+              padding: "10px",
+              border: "4px solid grey",
+            }}
+          >
+            <img src={imageUrl} width="100%" height="100%" />
+          </div>
+          <input type="file" onChange={this.handleImageAsFile} />
+
           <FormInput
             name="category"
             type="text"
             handleChange={this.handleChange}
             value={category}
             label="Nama Produk"
-            required
+            // required
           />
+
           <CustomButton type="submit"> Tambah Kategori </CustomButton>
         </form>
       </AddCategoryContainer>
