@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
 import {
-  addCollectionsStart,
+  editCollectionStart,
   fetchCollectionsStart,
 } from "../../redux/shop/shop.actions";
 import {
@@ -38,6 +38,24 @@ class EditProduct extends Component {
     fetchCollectionsStart();
   }
 
+  componentDidUpdate(previousProps, previousState) {
+    if (
+      previousProps.collectionByProductId !== this.props.collectionByProductId
+    ) {
+      const {
+        collectionByProductId: { imageUrl, name, price, stock, categoryId },
+      } = this.props;
+
+      this.setState({
+        name,
+        price,
+        stock,
+        imageUrl,
+        category: categoryId,
+      });
+    }
+  }
+
   handleImageAsFile = (e) => {
     const image = e.target.files[0];
     this.setState({
@@ -55,17 +73,22 @@ class EditProduct extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { addCollectionsStart } = this.props;
+    const { editCollectionStart, collectionByProductId } = this.props;
     const { category } = this.state;
 
-    addCollectionsStart({ categoryId: category, data: this.state });
+    const data = this.state;
+
+    data.id = collectionByProductId.id;
+
+    editCollectionStart({
+      categoryId: category,
+      data: data,
+    });
   };
 
   render() {
     const { name, price, stock, category, imageUrl } = this.state;
-    const { collectionCategory, collectionByProductId } = this.props;
-
-    console.log(collectionByProductId);
+    const { collectionCategory } = this.props;
 
     return (
       <EditProductContainer>
@@ -119,7 +142,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  addCollectionsStart: (data) => dispatch(addCollectionsStart(data)),
+  editCollectionStart: (data) => dispatch(editCollectionStart(data)),
   fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
 });
 

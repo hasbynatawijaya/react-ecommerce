@@ -1,9 +1,15 @@
 export const getCollectionByProductId = (collectionById, productId) => {
-  console.log(collectionById);
-  console.log(productId);
   if (collectionById) {
-    return collectionById.items.filter(
+    const filteredCollection = collectionById.items.filter(
       (collection) => collection.id === productId
     );
+
+    if (filteredCollection) {
+      filteredCollection[0].categoryId = collectionById.categoryId;
+
+      return filteredCollection[0];
+    } else {
+      return {};
+    }
   }
 };

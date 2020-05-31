@@ -81,6 +81,48 @@ export function* addCollectionAsync({ payload }) {
   }
 }
 
+export function* editCollectionAsync({ payload }) {
+  const { categoryId, data } = payload;
+
+  try {
+    let imageUrl = data.imageUrl;
+
+    // upload image to get image URL
+    if (data.imageAsFile) {
+      const storageRef = storage.ref();
+      const productImageRef = storageRef.child(`productImages/${data.id}`);
+
+      yield productImageRef.put(data.imageAsFile);
+      imageUrl = yield productImageRef.getDownloadURL();
+    }
+
+    const ref = firestore.collection("collections").doc(categoryId);
+    const snapshot = yield ref.get();
+    const collectionItems = yield snapshot.data().items;
+
+    const collectionIndex = yield collectionItems
+      .map((col) => col.id)
+      .indexOf(data.id);
+
+    collectionItems[collectionIndex] = {
+      id: data.id,
+      imageUrl,
+      price: data.price,
+      name: data.name,
+      stock: data.stock,
+    };
+    
+    yield ref.set(
+      {
+        items: [...collectionItems],
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function* addCategoryAsync({ payload }) {
   const { category, imageAsFile } = payload;
   const categoryId = uuid();
@@ -169,6 +211,10 @@ export function* addCollectionStart() {
   yield takeLatest(ShopActionTypes.ADD_COLLECTIONS_START, addCollectionAsync);
 }
 
+export function* editCollectionStart() {
+  yield takeLatest(ShopActionTypes.EDIT_COLLECTIONS_START, editCollectionAsync);
+}
+
 export function* addCategoryStart() {
   yield takeLatest(ShopActionTypes.ADD_CATEGORY_START, addCategoryAsync);
 }
@@ -185,6 +231,7 @@ export function* shopSagas() {
   yield all([
     call(fetchCollectionStart),
     call(addCollectionStart),
+    call(editCollectionStart),
     call(fetchCollectionByIdStart),
     call(addCategoryStart),
     call(editCategoryStart),

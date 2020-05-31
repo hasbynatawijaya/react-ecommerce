@@ -19,6 +19,11 @@ export const addCollectionsStart = (data) => ({
   payload: data,
 });
 
+export const editCollectionStart = (data) => ({
+  type: ShopActionTypes.EDIT_COLLECTIONS_START,
+  payload: data,
+});
+
 export const addCollectionsSuccess = (collectionsMap) => ({
   type: ShopActionTypes.ADD_COLLECTIONS_SUCCESS,
 });
