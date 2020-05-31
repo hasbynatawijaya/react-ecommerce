@@ -45,13 +45,40 @@ export function* fetchCollectionByIdAsync({ payload }) {
   }
 }
 
-export function* addCollectionAsync() {
-  const ref = firestore.collection("Hai");
-  const snapshot = yield ref.get();
+export function* addCollectionAsync({ payload }) {
+  const { categoryId, data } = payload;
+  const productId = uuid();
 
-  yield snapshot.docs.map((doc) => {
-    console.log(doc.id);
-  });
+  try {
+    // upload image to get image URL
+    const storageRef = storage.ref();
+    const productImageRef = storageRef.child(`productImages/${productId}`);
+
+    yield productImageRef.put(data.imageAsFile);
+    const imageUrl = yield productImageRef.getDownloadURL();
+
+    const ref = firestore.collection("collections").doc(categoryId);
+    const snapshot = yield ref.get();
+    const collectionItem = yield snapshot.data().items;
+
+    yield ref.set(
+      {
+        items: [
+          ...collectionItem,
+          {
+            id: productId,
+            imageUrl,
+            price: data.price,
+            name: data.name,
+            stock: data.stock,
+          },
+        ],
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export function* addCategoryAsync({ payload }) {
@@ -63,17 +90,14 @@ export function* addCategoryAsync({ payload }) {
     const storageRef = storage.ref();
     const productImageRef = storageRef.child(`categoryImages/${categoryId}`);
 
-    const res = yield productImageRef.put(imageAsFile);
+    yield productImageRef.put(imageAsFile);
     const imageUrl = yield productImageRef.getDownloadURL();
 
-    const collectionRef = yield firestore
-      .collection("collections")
-      .doc(categoryId)
-      .set({
-        imageUrl,
-        title: category,
-        items: [],
-      });
+    yield firestore.collection("collections").doc(categoryId).set({
+      imageUrl,
+      title: category,
+      items: [],
+    });
   } catch (error) {}
 }
 
@@ -94,12 +118,12 @@ export function* editCategoryAsync({ payload }) {
       const storageRef = storage.ref();
       const productImageRef = storageRef.child(`categoryImages/${categoryId}`);
 
-      const res = yield productImageRef.put(imageAsFile);
+      yield productImageRef.put(imageAsFile);
       imageUrl = yield productImageRef.getDownloadURL();
     }
 
     const categgoryRef = firestore.collection("collections").doc(categoryId);
-    const categorySetWithMerge = yield categgoryRef.set(
+    yield categgoryRef.set(
       {
         imageUrl,
         title: category,
@@ -117,12 +141,9 @@ export function* deleteCategoryAsync({ payload: categoryId }) {
 
     const storageRef = storage.ref();
     const productImageRef = storageRef.child(`categoryImages/${categoryId}`);
-    const res = yield productImageRef.delete();
+    yield productImageRef.delete();
 
-    const categoryRef = yield firestore
-      .collection("collections")
-      .doc(categoryId)
-      .delete();
+    yield firestore.collection("collections").doc(categoryId).delete();
   } catch (error) {
     console.log(error);
   }

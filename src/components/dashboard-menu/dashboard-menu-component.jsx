@@ -10,23 +10,16 @@ const DashboardMenu = ({ history, match }) => {
   return (
     <div>
       <DashboardMenuContainer>
-        <DashboardMenuItem onClick={() => history.push(`${match.path}`)}>
+        <DashboardMenuItem onClick={() => history.push(`/dashboard`)}>
           Dashboard
         </DashboardMenuItem>
         <DashboardMenuItem onClick={() => history.push(`/dashboard/category`)}>
           Kategori Produk
         </DashboardMenuItem>
+        <DashboardMenuItem onClick={() => history.push(`/dashboard/product`)}>
+          Data Produk
+        </DashboardMenuItem>
       </DashboardMenuContainer>
-      {/* <div>
-        <Switch>
-          <Route exact path={`${match.path}`} render={() => "Statistik"} />
-          <Route
-            exact
-            path={`${match.path}/:collectionId`}
-            render={() => "uhuy"}
-          />
-        </Switch>
-      </div> */}
     </div>
   );
 };

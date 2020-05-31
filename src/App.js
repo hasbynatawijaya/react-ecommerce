@@ -20,6 +20,7 @@ import DashboardLayout from "./layout/dashboard-layout.component";
 import Dashboard from "./pages/dashboard/dashboard.component";
 import AddProduct from "./components/add-product/add-product.component";
 import Category from "./pages/category/category.component";
+import MasterProductPages from "./pages/master-product/master-product.component";
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -68,13 +69,21 @@ class App extends React.Component {
             layout={DashboardLayout}
           />
           <RouteWithLayout
+            exact
             path="/dashboard/product/add"
             component={AddProduct}
             layout={DashboardLayout}
           />
           <RouteWithLayout
+            exact
             path="/dashboard/category"
             component={Category}
+            layout={DashboardLayout}
+          />
+          <RouteWithLayout
+            exact
+            path="/dashboard/product"
+            component={MasterProductPages}
             layout={DashboardLayout}
           />
         </Switch>

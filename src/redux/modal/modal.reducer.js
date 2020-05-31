@@ -3,6 +3,8 @@ import ModalActionTypes from "./modal.types";
 const INITIAL_STATE = {
   isOpenModalAddCategory: false,
   isOpenModalEditCategory: false,
+  isOpenModalAddProduct: false,
+  isOpenModalEditProduct: false,
 };
 
 const shopReducer = (state = INITIAL_STATE, action) => {
@@ -16,6 +18,16 @@ const shopReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isOpenModalEditCategory: !state.isOpenModalEditCategory,
+      };
+    case ModalActionTypes.IS_OPEN_ADD_PRODUCT:
+      return {
+        ...state,
+        isOpenModalAddProduct: !state.isOpenModalAddProduct,
+      };
+    case ModalActionTypes.IS_OPEN_EDIT_PRODUCT:
+      return {
+        ...state,
+        isOpenModalEditProduct: !state.isOpenModalEditProduct,
       };
     default:
       return state;

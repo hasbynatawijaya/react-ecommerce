@@ -14,8 +14,9 @@ export const fetchCollectionsFailure = (errorMessage) => ({
   payload: errorMessage,
 });
 
-export const addCollectionsStart = () => ({
+export const addCollectionsStart = (data) => ({
   type: ShopActionTypes.ADD_COLLECTIONS_START,
+  payload: data,
 });
 
 export const addCollectionsSuccess = (collectionsMap) => ({
@@ -55,4 +56,9 @@ export const fetchCollectionByIdSuccess = (collection) => ({
 export const fetchCollectionByIdFailure = (errorMessage) => ({
   type: ShopActionTypes.FETCH_COLLECTION_BY_ID_FAILURE,
   payload: errorMessage,
+});
+
+export const fetchCollectionByProductIdStart = (productId) => ({
+  type: ShopActionTypes.FETCH_COLLECTION_BY_PRODUCT_ID_START,
+  payload: productId,
 });

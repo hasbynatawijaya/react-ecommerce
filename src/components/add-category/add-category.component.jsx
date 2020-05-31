@@ -7,7 +7,6 @@ import CustomButton from "../custom-button/custom-button.component";
 import { AddCategoryContainer } from "./add-category.styles";
 
 import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
 
 import { addCategoryStart } from "../../redux/shop/shop.actions";
 
@@ -51,10 +50,7 @@ class AddCategory extends Component {
     return (
       <AddCategoryContainer>
         <form onSubmit={this.handleSubmit}>
-          <FormUpload
-            onChange={this.handleImageAsFile}
-            imageUrl={imageUrl}
-          ></FormUpload>
+          <FormUpload onChange={this.handleImageAsFile} imageUrl={imageUrl} />
           <FormInput
             name="category"
             type="text"

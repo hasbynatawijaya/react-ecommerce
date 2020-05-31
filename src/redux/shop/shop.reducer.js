@@ -1,10 +1,12 @@
 import ShopActionTypes from "./shop.types";
+import { getCollectionByProductId } from "./shop.utils";
 
 const INITIAL_STATE = {
   collections: null,
   isFetching: false,
   errorMessage: undefined,
   collectionById: null,
+  collectionByProductId: null,
 };
 
 const shopReducer = (state = INITIAL_STATE, action) => {
@@ -35,6 +37,14 @@ const shopReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         errorMessage: action.payload,
+      };
+    case ShopActionTypes.FETCH_COLLECTION_BY_PRODUCT_ID_START:
+      return {
+        ...state,
+        collectionByProductId: getCollectionByProductId(
+          state.collectionById,
+          action.payload
+        ),
       };
     default:
       return state;

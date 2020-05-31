@@ -44,3 +44,8 @@ export const selectCollectionById = createSelector(
   [selectShop],
   (shop) => shop.collectionById
 );
+
+export const selectCollectionByProductId = createSelector(
+  [selectShop],
+  (shop) => shop.collectionByProductId
+);

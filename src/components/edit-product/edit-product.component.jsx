@@ -4,7 +4,7 @@ import FormSelect from "../form-select/form-select.component";
 import FormUpload from "../form-upload/form-upload.component";
 import CustomButton from "../custom-button/custom-button.component";
 
-import { AddProductContainer } from "./add-product.styles";
+import { EditProductContainer } from "./edit-product.styles";
 
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -13,9 +13,12 @@ import {
   addCollectionsStart,
   fetchCollectionsStart,
 } from "../../redux/shop/shop.actions";
-import { selectCollectionsCategory } from "../../redux/shop/shop.selectors";
+import {
+  selectCollectionsCategory,
+  selectCollectionByProductId,
+} from "../../redux/shop/shop.selectors";
 
-class AddProduct extends Component {
+class EditProduct extends Component {
   constructor(props) {
     super(props);
 
@@ -60,10 +63,12 @@ class AddProduct extends Component {
 
   render() {
     const { name, price, stock, category, imageUrl } = this.state;
-    const { collectionCategory } = this.props;
+    const { collectionCategory, collectionByProductId } = this.props;
+
+    console.log(collectionByProductId);
 
     return (
-      <AddProductContainer>
+      <EditProductContainer>
         <form onSubmit={this.handleSubmit}>
           <FormUpload onChange={this.handleImageAsFile} imageUrl={imageUrl} />
           <FormSelect
@@ -103,13 +108,14 @@ class AddProduct extends Component {
           />
           <CustomButton type="submit"> Tambah Produk </CustomButton>
         </form>
-      </AddProductContainer>
+      </EditProductContainer>
     );
   }
 }
 
 const mapStateToProps = createStructuredSelector({
   collectionCategory: selectCollectionsCategory,
+  collectionByProductId: selectCollectionByProductId,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -117,4 +123,4 @@ const mapDispatchToProps = (dispatch) => ({
   fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddProduct);
+export default connect(mapStateToProps, mapDispatchToProps)(EditProduct);
