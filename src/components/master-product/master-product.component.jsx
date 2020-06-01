@@ -15,6 +15,7 @@ import {
   fetchCollectionsStart,
   fetchCollectionByIdStart,
   fetchCollectionByProductIdStart,
+  deleteCollectionsStart,
 } from "../../redux/shop/shop.actions";
 import {
   modalAddProduct,
@@ -34,7 +35,7 @@ const MasterProduct = (props) => {
   const [category, setCategory] = React.useState("choose");
   const {
     collectionCategory,
-    deleteCategoryStart,
+    deleteCollectionsStart,
     collectionById,
     modalAddProduct,
     modalEditProduct,
@@ -82,7 +83,13 @@ const MasterProduct = (props) => {
           <>
             <button onClick={() => handleModalEdit(col.id)}>Edit</button>
             {" | "}
-            <button onClick={() => deleteCategoryStart(col.id)}>Delete</button>
+            <button
+              onClick={() =>
+                deleteCollectionsStart({ id: col.id, categoryId: category })
+              }
+            >
+              Delete
+            </button>
           </>
         ),
       })
@@ -138,8 +145,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(fetchCollectionByProductIdStart(productId)),
   modalAddProduct: () => dispatch(modalAddProduct()),
   modalEditProduct: () => dispatch(modalEditProduct()),
-  //   deleteCategoryStart: (categoryId) =>
-  //     dispatch(deleteCategoryStart(categoryId)),
+  deleteCollectionsStart: (data) => dispatch(deleteCollectionsStart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MasterProduct);

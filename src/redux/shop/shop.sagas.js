@@ -13,6 +13,7 @@ import {
   fetchCollectionsFailure,
   fetchCollectionByIdSuccess,
   fetchCollectionByIdFailure,
+  deleteCollectionsStart,
 } from "./shop.actions";
 
 import { v4 as uuid } from "uuid";
@@ -111,7 +112,37 @@ export function* editCollectionAsync({ payload }) {
       name: data.name,
       stock: data.stock,
     };
-    
+
+    yield ref.set(
+      {
+        items: [...collectionItems],
+      },
+      { merge: true }
+    );
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export function* deleteCollectionAsync({ payload }) {
+  const { categoryId, id } = payload;
+
+  try {
+    // delete image first
+    const storageRef = storage.ref();
+    const productImageRef = storageRef.child(`productImages/${id}`);
+    yield productImageRef.delete();
+
+    const ref = firestore.collection("collections").doc(categoryId);
+    const snapshot = yield ref.get();
+    const collectionItems = yield snapshot.data().items;
+
+    const collectionIndex = yield collectionItems
+      .map((col) => col.id)
+      .indexOf(id);
+
+    collectionItems.splice(collectionIndex, 1);
+
     yield ref.set(
       {
         items: [...collectionItems],
@@ -215,6 +246,13 @@ export function* editCollectionStart() {
   yield takeLatest(ShopActionTypes.EDIT_COLLECTIONS_START, editCollectionAsync);
 }
 
+export function* deleteCollectionStart() {
+  yield takeLatest(
+    ShopActionTypes.DELETE_COLLECTIONS_START,
+    deleteCollectionAsync
+  );
+}
+
 export function* addCategoryStart() {
   yield takeLatest(ShopActionTypes.ADD_CATEGORY_START, addCategoryAsync);
 }
@@ -232,6 +270,7 @@ export function* shopSagas() {
     call(fetchCollectionStart),
     call(addCollectionStart),
     call(editCollectionStart),
+    call(deleteCollectionStart),
     call(fetchCollectionByIdStart),
     call(addCategoryStart),
     call(editCategoryStart),
