@@ -1,23 +1,35 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { createStructuredSelector } from 'reselect';
+import React from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
-import { selectDirectorySections } from '../../redux/directory/directory.selectors';
+import { selectCollectionsCategory } from "../../redux/shop/shop.selectors";
 
-import MenuItem from '../menu-item/menu-item.component';
+import { fetchCollectionsStart } from "../../redux/shop/shop.actions";
 
-import { DirectoryMenuContainer } from './directory.styles';
+import MenuItem from "../menu-item/menu-item.component";
 
-const Directory = ({ sections }) => (
-  <DirectoryMenuContainer>
-    {sections.map(({ id, ...otherSectionProps }) => (
-      <MenuItem key={id} {...otherSectionProps} />
-    ))}
-  </DirectoryMenuContainer>
-);
+import { DirectoryMenuContainer } from "./directory.styles";
 
-const mapStateToProps = createStructuredSelector({
-  sections: selectDirectorySections
+const Directory = ({ collectionsCategory, fetchCollectionsStart }) => {
+  React.useEffect(() => {
+    fetchCollectionsStart();
+  }, []);
+
+  return (
+    <DirectoryMenuContainer>
+      {collectionsCategory.map(({ id, ...otherSectionProps }) => (
+        <MenuItem key={id} {...otherSectionProps} />
+      ))}
+    </DirectoryMenuContainer>
+  );
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
 });
 
-export default connect(mapStateToProps)(Directory);
+const mapStateToProps = createStructuredSelector({
+  collectionsCategory: selectCollectionsCategory,
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Directory);
