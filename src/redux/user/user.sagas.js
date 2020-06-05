@@ -75,7 +75,17 @@ export function* signUp({ payload: { email, password, displayName } }) {
   try {
     const { user } = yield auth.createUserWithEmailAndPassword(email, password);
 
-    yield put(signUpSuccess({ user, additionalData: { displayName } }));
+    yield put(
+      signUpSuccess({
+        user,
+        additionalData: {
+          displayName,
+          cart: [],
+          transaction: [],
+          role: "admin",
+        },
+      })
+    );
   } catch (error) {
     yield put(signUpFailure(error));
   }
