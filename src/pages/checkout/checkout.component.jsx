@@ -10,6 +10,7 @@ import { checkoutStart } from "../../redux/checkout/checkout.actions";
 import {
   selectCartItems,
   selectCartTotal,
+  selectCartTotalWeight,
 } from "../../redux/cart/cart.selectors";
 
 import {
@@ -19,7 +20,7 @@ import {
   TotalContainer,
 } from "./checkout.styles";
 
-const CheckoutPage = ({ cartItems, total, checkoutStart }) => (
+const CheckoutPage = ({ cartItems, total, checkoutStart, totalWeight }) => (
   <CheckoutPageContainer>
     <CheckoutHeaderContainer>
       <HeaderBlockContainer>
@@ -27,6 +28,9 @@ const CheckoutPage = ({ cartItems, total, checkoutStart }) => (
       </HeaderBlockContainer>
       <HeaderBlockContainer>
         <span>Description</span>
+      </HeaderBlockContainer>
+      <HeaderBlockContainer>
+        <span>Berat</span>
       </HeaderBlockContainer>
       <HeaderBlockContainer>
         <span>Quantity</span>
@@ -41,8 +45,7 @@ const CheckoutPage = ({ cartItems, total, checkoutStart }) => (
     {cartItems.map((cartItem) => (
       <CheckoutItem key={cartItem.id} cartItem={cartItem} />
     ))}
-    <CheckoutForm />
-    <TotalContainer>TOTAL: ${total}</TotalContainer>
+    <CheckoutForm totalWeight={totalWeight} totalPrice={total} />
   </CheckoutPageContainer>
 );
 
@@ -53,6 +56,7 @@ const mapDispatchToProps = (dispatch) => ({
 const mapStateToProps = createStructuredSelector({
   cartItems: selectCartItems,
   total: selectCartTotal,
+  totalWeight: selectCartTotalWeight,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckoutPage);

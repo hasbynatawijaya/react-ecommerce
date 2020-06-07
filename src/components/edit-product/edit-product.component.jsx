@@ -27,6 +27,7 @@ class EditProduct extends Component {
       price: "",
       stock: "",
       category: "choose",
+      weight: "",
       imageAsFile: "",
       imageUrl: null,
     };
@@ -87,7 +88,7 @@ class EditProduct extends Component {
   };
 
   render() {
-    const { name, price, stock, category, imageUrl } = this.state;
+    const { name, price, stock, category, imageUrl, weight } = this.state;
     const { collectionCategory } = this.props;
 
     return (
@@ -111,7 +112,7 @@ class EditProduct extends Component {
             handleChange={this.handleChange}
             value={name}
             label="Nama Produk"
-            // required
+            required
           />
           <FormInput
             name="price"
@@ -119,7 +120,7 @@ class EditProduct extends Component {
             value={price}
             handleChange={this.handleChange}
             label="Harga"
-            // required
+            required
           />
           <FormInput
             name="stock"
@@ -127,7 +128,15 @@ class EditProduct extends Component {
             value={stock}
             handleChange={this.handleChange}
             label="Jumlah stok"
-            // required
+            required
+          />
+          <FormInput
+            name="weight"
+            type="number"
+            value={weight}
+            handleChange={this.handleChange}
+            label="Berat (gram)"
+            required
           />
           <CustomButton type="submit"> Tambah Produk </CustomButton>
         </form>

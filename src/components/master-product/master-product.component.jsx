@@ -79,6 +79,7 @@ const MasterProduct = (props) => {
         Name: col.name,
         Price: col.price,
         Stock: col.stock,
+        Weight: col.weight,
         Action: (
           <>
             <button onClick={() => handleModalEdit(col.id)}>Edit</button>
@@ -115,7 +116,14 @@ const MasterProduct = (props) => {
         ))}
       </FormSelect>
       <Table
-        tableHead={["Photo", "Nama Produk", "Harga", "Stok", "Aksi"]}
+        tableHead={[
+          "Photo",
+          "Nama Produk",
+          "Harga",
+          "Stok",
+          "Berat (gram)",
+          "Aksi",
+        ]}
         tableData={tableData}
       />
       <Modal isOpen={isOpenModalAddProduct} contentLabel="Example Modal">

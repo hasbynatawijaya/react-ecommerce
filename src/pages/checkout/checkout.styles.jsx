@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const CheckoutPageContainer = styled.div`
-  width: 55%;
+  width: 70%;
   min-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -24,11 +24,7 @@ export const CheckoutHeaderContainer = styled.div`
 
 export const HeaderBlockContainer = styled.div`
   text-transform: capitalize;
-  width: 23%;
-
-  &:last-child {
-    width: 8%;
-  }
+  width: 16.6%;
 `;
 
 export const TotalContainer = styled.div`

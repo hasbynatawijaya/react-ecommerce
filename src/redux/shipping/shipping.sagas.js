@@ -19,7 +19,13 @@ const instance = axios.create({
   headers: { key: "b826d90eba7378d6039ea64e996f11fc" },
 });
 
-export function* fetchCity() {}
+export function* fetchCity({ payload: provinceId }) {
+  try {
+    const res = yield instance.get(`city?province=${provinceId}`);
+
+    yield put(fetchCitySuccess(res.data.rajaongkir.results));
+  } catch (error) {}
+}
 
 export function* fetchProvince() {
   try {
@@ -31,7 +37,15 @@ export function* fetchProvince() {
   }
 }
 
-export function* fetchShippingCost() {}
+export function* fetchShippingCost({ payload: data }) {
+  try {
+    const res = yield instance.post("cost", data);
+
+    yield put(fetchShippingCostSuccess(res.data.rajaongkir.results[0].costs));
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 export function* onFetchCityStart() {
   yield takeLatest(ShippingActionTypes.FETCH_CITY_START, fetchCity);

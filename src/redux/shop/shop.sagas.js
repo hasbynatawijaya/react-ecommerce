@@ -72,6 +72,7 @@ export function* addCollectionAsync({ payload }) {
             price: data.price,
             name: data.name,
             stock: data.stock,
+            weight: data.weight,
           },
         ],
       },
@@ -111,6 +112,7 @@ export function* editCollectionAsync({ payload }) {
       price: data.price,
       name: data.name,
       stock: data.stock,
+      weight: data.weight,
     };
 
     yield ref.set(
