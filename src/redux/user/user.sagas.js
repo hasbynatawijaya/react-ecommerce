@@ -81,8 +81,7 @@ export function* signUp({ payload: { email, password, displayName } }) {
         additionalData: {
           displayName,
           cart: [],
-          transaction: [],
-          role: "admin",
+          role: "user",
         },
       })
     );

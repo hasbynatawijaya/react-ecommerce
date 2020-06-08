@@ -1,5 +1,10 @@
 import ShopActionTypes from "./shop.types";
 
+export const loadingCollectionAction = (isLoading) => ({
+  type: ShopActionTypes.LOADING_COLLECTION_ACTION,
+  payload: isLoading,
+});
+
 export const fetchCollectionsStart = () => ({
   type: ShopActionTypes.FETCH_COLLECTIONS_START,
 });
@@ -43,14 +48,26 @@ export const addCategoryStart = (data) => ({
   payload: data,
 });
 
+export const addCategorySuccess = () => ({
+  type: ShopActionTypes.ADD_CATEGORY_SUCCESS,
+});
+
 export const editCategoryStart = (data) => ({
   type: ShopActionTypes.EDIT_CATEGORY_START,
   payload: data,
 });
 
+export const editCategorySuccess = () => ({
+  type: ShopActionTypes.EDIT_CATEGORY_SUCCESS,
+});
+
 export const deleteCategoryStart = (categoryId) => ({
   type: ShopActionTypes.DELETE_CATEGORY_START,
   payload: categoryId,
+});
+
+export const deleteCategorySuccess = () => ({
+  type: ShopActionTypes.DELETE_CATEGORY_SUCCESS,
 });
 
 export const fetchCollectionByIdStart = (collectionId) => ({
@@ -71,4 +88,8 @@ export const fetchCollectionByIdFailure = (errorMessage) => ({
 export const fetchCollectionByProductIdStart = (productId) => ({
   type: ShopActionTypes.FETCH_COLLECTION_BY_PRODUCT_ID_START,
   payload: productId,
+});
+
+export const resetCollectionByProductId = () => ({
+  type: ShopActionTypes.RESET_COLLECTION_BY_PRODUCT_ID,
 });

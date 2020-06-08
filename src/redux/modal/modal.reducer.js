@@ -5,6 +5,8 @@ const INITIAL_STATE = {
   isOpenModalEditCategory: false,
   isOpenModalAddProduct: false,
   isOpenModalEditProduct: false,
+  isOpenModalUploadTransferProof: false,
+  isOpenModalServiceNumber: false,
 };
 
 const shopReducer = (state = INITIAL_STATE, action) => {
@@ -28,6 +30,16 @@ const shopReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isOpenModalEditProduct: !state.isOpenModalEditProduct,
+      };
+    case ModalActionTypes.IS_OPEN_MODAL_UPLOAD_TRANSFER_PROOF:
+      return {
+        ...state,
+        isOpenModalUploadTransferProof: !state.isOpenModalUploadTransferProof,
+      };
+    case ModalActionTypes.IS_OPEN_MODAL_SERVICE_NUMBER:
+      return {
+        ...state,
+        isOpenModalServiceNumber: !state.isOpenModalServiceNumber,
       };
     default:
       return state;

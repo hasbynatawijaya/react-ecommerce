@@ -45,7 +45,11 @@ const CheckoutPage = ({ cartItems, total, checkoutStart, totalWeight }) => (
     {cartItems.map((cartItem) => (
       <CheckoutItem key={cartItem.id} cartItem={cartItem} />
     ))}
-    <CheckoutForm totalWeight={totalWeight} totalPrice={total} />
+    <CheckoutForm
+      totalWeight={totalWeight}
+      totalPrice={total}
+      items={cartItems}
+    />
   </CheckoutPageContainer>
 );
 

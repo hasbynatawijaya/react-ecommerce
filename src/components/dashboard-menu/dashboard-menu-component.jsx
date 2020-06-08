@@ -19,6 +19,11 @@ const DashboardMenu = ({ history, match }) => {
         <DashboardMenuItem onClick={() => history.push(`/dashboard/product`)}>
           Data Produk
         </DashboardMenuItem>
+        <DashboardMenuItem
+          onClick={() => history.push(`/dashboard/transaction`)}
+        >
+          Data Transaksi
+        </DashboardMenuItem>
       </DashboardMenuContainer>
     </div>
   );

@@ -15,3 +15,11 @@ export const modalAddProduct = () => ({
 export const modalEditProduct = () => ({
   type: ModalActionTypes.IS_OPEN_EDIT_PRODUCT,
 });
+
+export const modalUploadTransferProof = () => ({
+  type: ModalActionTypes.IS_OPEN_MODAL_UPLOAD_TRANSFER_PROOF,
+});
+
+export const modalUploadServiceNumber = () => ({
+  type: ModalActionTypes.IS_OPEN_MODAL_SERVICE_NUMBER,
+});

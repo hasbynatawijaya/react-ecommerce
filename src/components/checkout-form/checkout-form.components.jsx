@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import moment from "moment";
 
 import {
   fetchProvinceStart,
@@ -9,15 +10,19 @@ import {
   fetchShippingCostStart,
 } from "../../redux/shipping/shipping.actions";
 
+import { checkoutStart } from "../../redux/checkout/checkout.actions";
+
 import {
   selectProvince,
   selectCity,
   selectShippingCost,
 } from "../../redux/shipping/shipping.selectors";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
 
 import FormInput from "../form-input/form-input.component";
 import FormSelect from "../form-select/form-select.component";
 import FormTextArea from "../form-text-area/form-text-area.component";
+import CustomButton from "../custom-button/custom-button.component";
 
 import { CheckoutFormContainer } from "./checkout.styles";
 
@@ -30,8 +35,8 @@ class CheckoutForm extends Component {
       address: "",
       phoneNumber: "",
       courier: "choose",
-      province: "choose",
-      city: "choose",
+      province: "choose-null",
+      city: "choose-null",
       shippingPackage: "choose-0",
     };
   }
@@ -68,6 +73,37 @@ class CheckoutForm extends Component {
     this.setState({ [name]: value });
   };
 
+  handleSubmit = (e) => {
+    e.preventDefault();
+
+    const { checkoutStart, currentUser, totalPrice, items } = this.props;
+    const { shippingPackage, province, city } = this.state;
+
+    checkoutStart({
+      ...this.state,
+      items,
+      totalPrice,
+      shippingPackageObj: {
+        service: shippingPackage.split("-")[0],
+        cost: parseInt(shippingPackage.split("-")[1]),
+      },
+      provinceObj: {
+        provinceId: province.split("-")[0],
+        province: province.split("-")[1],
+      },
+      city: {
+        cityId: city.split("-")[0],
+        city: city.split("-")[1],
+      },
+      serviceNumber: "",
+      status: "process",
+      transferPhotoImageUrl: "",
+      userId: currentUser.id,
+      createdAt: moment().locale("id").format("DD MMMM YYYY"),
+      expiredAt: moment().add(2, "days").locale("id").format("DD MMMM YYYY"),
+    });
+  };
+
   render() {
     const {
       name,
@@ -82,7 +118,7 @@ class CheckoutForm extends Component {
 
     return (
       <CheckoutFormContainer>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <FormInput
             name="name"
             type="text"
@@ -113,10 +149,11 @@ class CheckoutForm extends Component {
             label="Provinsi"
             name="province"
             onChange={this.handleChange}
+            required
           >
-            <option value="choose">Pilih Provinsi</option>
+            <option value="choose-null">Pilih Provinsi</option>
             {provinceRes.map(({ province, province_id }) => (
-              <option value={province_id}>{province}</option>
+              <option value={`${province_id}-${province}`}>{province}</option>
             ))}
           </FormSelect>
           <FormSelect
@@ -124,10 +161,11 @@ class CheckoutForm extends Component {
             label="Kota / Kabupaten"
             name="city"
             onChange={this.handleChange}
+            required
           >
-            <option value="choose">Pilih Kota / Kabupaten</option>
+            <option value="choose-null">Pilih Kota / Kabupaten</option>
             {cityRes.map(({ city_id, city_name, type }) => (
-              <option value={city_id}>
+              <option value={`${city_id}-${city_name} (${type})`}>
                 {city_name} - {type}
               </option>
             ))}
@@ -137,6 +175,7 @@ class CheckoutForm extends Component {
             label="Kurir Pengiriman"
             name="courier"
             onChange={this.handleChange}
+            required
           >
             <option value="choose">Pilih Kurir</option>
             <option value="jne">JNE</option>
@@ -148,6 +187,7 @@ class CheckoutForm extends Component {
             label="Paket Pengiriman"
             name="shippingPackage"
             onChange={this.handleChange}
+            required
           >
             <option value="choose-0">Pilih paket pengiriman</option>
             {shippingCost.map(({ service, description, cost }, i) => (
@@ -159,6 +199,7 @@ class CheckoutForm extends Component {
           <p>
             Total Price {totalPrice + parseFloat(shippingPackage.split("-")[1])}
           </p>
+          <CustomButton>Pesan</CustomButton>
         </form>
       </CheckoutFormContainer>
     );
@@ -169,12 +210,14 @@ const mapDispatchToProps = (dispatch) => ({
   fetchProvinceStart: () => dispatch(fetchProvinceStart()),
   fetchCityStart: (provinceId) => dispatch(fetchCityStart(provinceId)),
   fetchShippingCostStart: (data) => dispatch(fetchShippingCostStart(data)),
+  checkoutStart: (data) => dispatch(checkoutStart(data)),
 });
 
 const mapStateToProps = createStructuredSelector({
   provinceRes: selectProvince,
   cityRes: selectCity,
   shippingCost: selectShippingCost,
+  currentUser: selectCurrentUser,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckoutForm);

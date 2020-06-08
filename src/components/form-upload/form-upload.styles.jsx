@@ -1,5 +1,9 @@
 import styled from "styled-components";
 
+export const FormUploadContainer = styled.div`
+  margin: 15px 0px;
+`;
+
 export const FormUploadImageContainer = styled.div`
   width: 400px;
   height: 280px;

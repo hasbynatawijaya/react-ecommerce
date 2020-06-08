@@ -81,11 +81,11 @@ const Category = (props) => {
       </CategoryHeader>
       <Table tableHead={["Kategori", "Photo", "Aksi"]} tableData={tableData} />
       <Modal isOpen={isOpenModalEditCategory} contentLabel="Example Modal">
-        <button onClick={handleModalEdit}>close edit</button>
+        <button onClick={handleModalEdit}>close</button>
         <EditCategory />
       </Modal>
       <Modal isOpen={isOpenModalAddCategory} contentLabel="Example Modal">
-        <button onClick={() => modalAddCategory()}>close add</button>
+        <button onClick={() => modalAddCategory()}>close</button>
         <AddCategory />
       </Modal>
     </div>

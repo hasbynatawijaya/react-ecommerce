@@ -10,7 +10,10 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
 import { editCategoryStart } from "../../redux/shop/shop.actions";
-import { selectCollectionById } from "../../redux/shop/shop.selectors";
+import {
+  selectCollectionById,
+  selectLoadingCategoryAction,
+} from "../../redux/shop/shop.selectors";
 
 class EditCategory extends Component {
   constructor(props) {
@@ -60,6 +63,7 @@ class EditCategory extends Component {
 
   render() {
     const { category, imageUrl } = this.state;
+    const { loading } = this.props;
 
     return (
       <EditCategoryContainer>
@@ -74,7 +78,9 @@ class EditCategory extends Component {
             required
           />
 
-          <CustomButton type="submit"> Tambah Kategori </CustomButton>
+          <CustomButton disabled={loading} type="submit">
+            {loading ? "loading" : "edit kategori"}
+          </CustomButton>
         </form>
       </EditCategoryContainer>
     );
@@ -83,6 +89,7 @@ class EditCategory extends Component {
 
 const mapStateToProps = createStructuredSelector({
   collectionById: selectCollectionById,
+  loading: selectLoadingCategoryAction,
 });
 
 const mapDispatchToProps = (dispatch) => ({

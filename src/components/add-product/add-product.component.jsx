@@ -13,7 +13,10 @@ import {
   addCollectionsStart,
   fetchCollectionsStart,
 } from "../../redux/shop/shop.actions";
-import { selectCollectionsCategory } from "../../redux/shop/shop.selectors";
+import {
+  selectCollectionsCategory,
+  selectLoadingCollectionAction,
+} from "../../redux/shop/shop.selectors";
 
 class AddProduct extends Component {
   constructor(props) {
@@ -61,7 +64,7 @@ class AddProduct extends Component {
 
   render() {
     const { name, price, stock, category, imageUrl, weight } = this.state;
-    const { collectionCategory } = this.props;
+    const { collectionCategory, loading } = this.props;
 
     return (
       <AddProductContainer>
@@ -110,7 +113,9 @@ class AddProduct extends Component {
             label="Berat (gram)"
             required
           />
-          <CustomButton type="submit"> Tambah Produk </CustomButton>
+          <CustomButton disabled={loading} type="submit">
+            {loading ? "loading" : "Tambah Produk"}
+          </CustomButton>
         </form>
       </AddProductContainer>
     );
@@ -119,6 +124,7 @@ class AddProduct extends Component {
 
 const mapStateToProps = createStructuredSelector({
   collectionCategory: selectCollectionsCategory,
+  loading: selectLoadingCollectionAction,
 });
 
 const mapDispatchToProps = (dispatch) => ({

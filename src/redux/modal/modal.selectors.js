@@ -21,3 +21,13 @@ export const selectModalEditProduct = createSelector(
   [selectModal],
   (modal) => modal.isOpenModalEditProduct
 );
+
+export const selectModalUploadTransferProof = createSelector(
+  [selectModal],
+  (modal) => modal.isOpenModalUploadTransferProof
+);
+
+export const selectModalServiceNumber = createSelector(
+  [selectModal],
+  (modal) => modal.isOpenModalServiceNumber
+);

@@ -9,7 +9,8 @@ export const TableRow = styled.tr`
   border: 1px solid #dddddd;
   text-align: left;
   padding: 8px;
-
+  vertical-align:top
+  
   &:nth-child(even) {
     background-color: #dddddd;
   }

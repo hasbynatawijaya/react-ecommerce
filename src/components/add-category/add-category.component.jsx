@@ -7,8 +7,11 @@ import CustomButton from "../custom-button/custom-button.component";
 import { AddCategoryContainer } from "./add-category.styles";
 
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
 import { addCategoryStart } from "../../redux/shop/shop.actions";
+
+import { selectLoadingCategoryAction } from "../../redux/shop/shop.selectors";
 
 class AddCategory extends Component {
   constructor(props) {
@@ -46,6 +49,9 @@ class AddCategory extends Component {
 
   render() {
     const { category, imageUrl } = this.state;
+    const { loading } = this.props;
+
+    console.log(loading);
 
     return (
       <AddCategoryContainer>
@@ -59,15 +65,21 @@ class AddCategory extends Component {
             label="Nama Produk"
             required
           />
-          <CustomButton type="submit"> Tambah Kategori </CustomButton>
+          <CustomButton disabled={loading} type="submit">
+            {loading ? "Loading" : "Tambah Kategori"}
+          </CustomButton>
         </form>
       </AddCategoryContainer>
     );
   }
 }
 
+const mapStateToProps = createStructuredSelector({
+  loading: selectLoadingCategoryAction,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   addCategoryStart: (data) => dispatch(addCategoryStart(data)),
 });
 
-export default connect(null, mapDispatchToProps)(AddCategory);
+export default connect(mapStateToProps, mapDispatchToProps)(AddCategory);

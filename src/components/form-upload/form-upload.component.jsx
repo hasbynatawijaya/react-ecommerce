@@ -3,11 +3,12 @@ import React from "react";
 import {
   FormUploadImageContainer,
   FromUploadImage,
+  FormUploadContainer,
 } from "./form-upload.styles";
 
 const FormUpload = ({ handleChange, children, imageUrl, ...props }) => {
   return (
-    <div>
+    <FormUploadContainer>
       <FormUploadImageContainer
         onClick={(e) => document.getElementById("hiddenFileInput").click()}
       >
@@ -19,7 +20,7 @@ const FormUpload = ({ handleChange, children, imageUrl, ...props }) => {
         style={{ display: "none" }}
         {...props}
       />
-    </div>
+    </FormUploadContainer>
   );
 };
 

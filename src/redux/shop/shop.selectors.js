@@ -2,9 +2,19 @@ import { createSelector } from "reselect";
 
 const selectShop = (state) => state.shop;
 
+export const selectLoadingCollectionAction = createSelector(
+  [selectShop],
+  (shop) => shop.loadingCollectionAction
+);
+
 export const selectCollections = createSelector(
   [selectShop],
   (shop) => shop.collections
+);
+
+export const selectLoadingCategoryAction = createSelector(
+  [selectShop],
+  (shop) => shop.loadingCategoryAction
 );
 
 export const selectCollectionsForPreview = createSelector(

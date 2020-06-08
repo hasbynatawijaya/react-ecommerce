@@ -19,7 +19,10 @@ const Table = (props) => {
           return (
             <TableRow key={data.key}>
               {Object.keys(data).map(
-                (key) => key !== "key" && <TableData>{data[key]}</TableData>
+                (key) =>
+                  key !== "key" && (
+                    <TableData>{data[key]}</TableData>
+                  )
               )}
             </TableRow>
           );

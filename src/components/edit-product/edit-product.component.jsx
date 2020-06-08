@@ -12,10 +12,12 @@ import { createStructuredSelector } from "reselect";
 import {
   editCollectionStart,
   fetchCollectionsStart,
+  resetCollectionByProductId,
 } from "../../redux/shop/shop.actions";
 import {
   selectCollectionsCategory,
   selectCollectionByProductId,
+  selectLoadingCollectionAction,
 } from "../../redux/shop/shop.selectors";
 
 class EditProduct extends Component {
@@ -33,18 +35,19 @@ class EditProduct extends Component {
     };
   }
 
-  componentDidMount() {
-    const { fetchCollectionsStart } = this.props;
-
-    fetchCollectionsStart();
-  }
-
   componentDidUpdate(previousProps, previousState) {
     if (
       previousProps.collectionByProductId !== this.props.collectionByProductId
     ) {
       const {
-        collectionByProductId: { imageUrl, name, price, stock, categoryId },
+        collectionByProductId: {
+          imageUrl,
+          name,
+          price,
+          stock,
+          categoryId,
+          weight,
+        },
       } = this.props;
 
       this.setState({
@@ -53,8 +56,13 @@ class EditProduct extends Component {
         stock,
         imageUrl,
         category: categoryId,
+        weight,
       });
     }
+  }
+
+  componentWillUnmount() {
+    this.props.resetCollectionByProductId();
   }
 
   handleImageAsFile = (e) => {
@@ -89,7 +97,7 @@ class EditProduct extends Component {
 
   render() {
     const { name, price, stock, category, imageUrl, weight } = this.state;
-    const { collectionCategory } = this.props;
+    const { collectionCategory, loading } = this.props;
 
     return (
       <EditProductContainer>
@@ -138,7 +146,9 @@ class EditProduct extends Component {
             label="Berat (gram)"
             required
           />
-          <CustomButton type="submit"> Tambah Produk </CustomButton>
+          <CustomButton disabled={loading} type="submit">
+            {loading ? "loading" : "edit produk"}
+          </CustomButton>
         </form>
       </EditProductContainer>
     );
@@ -148,11 +158,13 @@ class EditProduct extends Component {
 const mapStateToProps = createStructuredSelector({
   collectionCategory: selectCollectionsCategory,
   collectionByProductId: selectCollectionByProductId,
+  loading: selectLoadingCollectionAction,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   editCollectionStart: (data) => dispatch(editCollectionStart(data)),
   fetchCollectionsStart: () => dispatch(fetchCollectionsStart()),
+  resetCollectionByProductId: () => dispatch(resetCollectionByProductId()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProduct);

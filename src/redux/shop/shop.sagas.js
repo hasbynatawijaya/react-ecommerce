@@ -1,5 +1,6 @@
 import { takeLatest, call, put, all } from "redux-saga/effects";
 import { storage } from "../../firebase/firebase.utils";
+import { toastr } from "react-redux-toastr";
 
 import ShopActionTypes from "./shop.types";
 
@@ -13,8 +14,18 @@ import {
   fetchCollectionsFailure,
   fetchCollectionByIdSuccess,
   fetchCollectionByIdFailure,
-  deleteCollectionsStart,
+  addCategorySuccess,
+  editCategorySuccess,
+  deleteCategorySuccess,
+  loadingCollectionAction,
 } from "./shop.actions";
+
+import {
+  modalAddCategory,
+  modalEditCategory,
+  modalAddProduct,
+  modalEditProduct,
+} from "../modal/modal.actions";
 
 import { v4 as uuid } from "uuid";
 
@@ -42,6 +53,7 @@ export function* fetchCollectionByIdAsync({ payload }) {
       fetchCollectionByIdSuccess({ categoryId: payload, ...snapshot.data() })
     );
   } catch (error) {
+    console.log(error);
     yield put(fetchCollectionByIdFailure(error.message));
   }
 }
@@ -52,6 +64,9 @@ export function* addCollectionAsync({ payload }) {
 
   try {
     // upload image to get image URL
+
+    yield put(loadingCollectionAction(true));
+
     const storageRef = storage.ref();
     const productImageRef = storageRef.child(`productImages/${productId}`);
 
@@ -78,8 +93,13 @@ export function* addCollectionAsync({ payload }) {
       },
       { merge: true }
     );
+    yield toastr.success("Sukses", "Berhasil menambahkan produk");
+    yield put(loadingCollectionAction(false));
+    yield put(modalAddProduct());
+    yield fetchCollectionByIdAsync({ payload: categoryId });
   } catch (error) {
-    console.log(error);
+    yield toastr.success("Error", error);
+    yield put(loadingCollectionAction(false));
   }
 }
 
@@ -87,6 +107,8 @@ export function* editCollectionAsync({ payload }) {
   const { categoryId, data } = payload;
 
   try {
+    yield put(loadingCollectionAction(true));
+
     let imageUrl = data.imageUrl;
 
     // upload image to get image URL
@@ -121,8 +143,13 @@ export function* editCollectionAsync({ payload }) {
       },
       { merge: true }
     );
+    yield toastr.success("Sukses", "Berhasil mengubah produk");
+    yield put(loadingCollectionAction(false));
+    yield put(modalEditProduct());
+    yield fetchCollectionByIdAsync({ payload: categoryId });
   } catch (error) {
-    console.log(error);
+    yield toastr.success("Error", error);
+    yield put(loadingCollectionAction(false));
   }
 }
 
@@ -130,6 +157,7 @@ export function* deleteCollectionAsync({ payload }) {
   const { categoryId, id } = payload;
 
   try {
+    yield put(loadingCollectionAction(true));
     // delete image first
     const storageRef = storage.ref();
     const productImageRef = storageRef.child(`productImages/${id}`);
@@ -151,8 +179,14 @@ export function* deleteCollectionAsync({ payload }) {
       },
       { merge: true }
     );
+
+    yield toastr.success("Sukses", "Berhasil menghapus produk");
+    yield put(loadingCollectionAction(false));
+    yield fetchCollectionByIdAsync({ payload: categoryId });
   } catch (error) {
     console.log(error);
+    yield toastr.success("Error", error);
+    yield put(loadingCollectionAction(false));
   }
 }
 
@@ -173,7 +207,15 @@ export function* addCategoryAsync({ payload }) {
       title: category,
       items: [],
     });
-  } catch (error) {}
+
+    yield toastr.success("Sukses", "Berhasil menambah kategori produk");
+    yield put(addCategorySuccess());
+    yield put(modalAddCategory());
+    yield fetchCollectionsAsync();
+  } catch (error) {
+    yield put(addCategorySuccess());
+    yield toastr.error("Error", error);
+  }
 }
 
 export function* editCategoryAsync({ payload }) {
@@ -205,8 +247,14 @@ export function* editCategoryAsync({ payload }) {
       },
       { merge: true }
     );
+
+    yield toastr.success("Sukses", "Berhasil mengubah kategori produk");
+    yield put(editCategorySuccess());
+    yield put(modalEditCategory());
+    yield fetchCollectionsAsync();
   } catch (error) {
-    console.log(error);
+    yield toastr.error("Error", error);
+    yield put(editCategorySuccess());
   }
 }
 
@@ -219,8 +267,13 @@ export function* deleteCategoryAsync({ payload: categoryId }) {
     yield productImageRef.delete();
 
     yield firestore.collection("collections").doc(categoryId).delete();
+
+    yield toastr.success("Sukses", "Berhasil menghapus kategori produk");
+    yield put(deleteCategorySuccess());
+    yield fetchCollectionsAsync();
   } catch (error) {
-    console.log(error);
+    yield toastr.error("Error", error);
+    yield put(deleteCategorySuccess());
   }
 }
 

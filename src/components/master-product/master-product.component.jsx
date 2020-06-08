@@ -52,7 +52,7 @@ const MasterProduct = (props) => {
     const { value } = event.target;
     const { fetchCollectionByIdStart } = props;
 
-    setCategory(value);
+    // setCategory(value);
     fetchCollectionByIdStart(value);
   };
 
@@ -96,6 +96,12 @@ const MasterProduct = (props) => {
       })
     );
 
+    if (collectionById === null) {
+      setCategory("choose");
+    } else {
+      setCategory(collectionById.categoryId);
+    }
+
     setTableData(dataSource);
   }, [collectionById]);
 
@@ -131,7 +137,7 @@ const MasterProduct = (props) => {
         <AddProduct />
       </Modal>
       <Modal isOpen={isOpenModalEditProduct} contentLabel="Example Modal">
-        <button onClick={() => modalEditProduct()}>close edit</button>
+        <button onClick={handleModalEdit}>close edit</button>
         <EditProduct />
       </Modal>
     </div>
