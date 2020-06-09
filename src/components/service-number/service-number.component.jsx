@@ -1,15 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
 import FormInput from "../form-input/form-input.component";
 import Button from "../custom-button/custom-button.component";
 
 import { submitServiceNumberStart } from "../../redux/checkout/checkout.actions";
 
+import { selectLoadingCheckoutAction } from "../../redux/checkout/checkout.selectors";
+
 const ServiceNumber = ({
   transactionId,
   serviceNumber,
   submitServiceNumberStart,
+  loading,
 }) => {
   const [serviceNumberValue, setServiceNumberValue] = React.useState(
     serviceNumber
@@ -36,14 +40,18 @@ const ServiceNumber = ({
           onChange={handleChange}
           required
         />
-        <Button>Submit</Button>
+        <Button>{loading ? "loading" : "Submit"}</Button>
       </form>
     </div>
   );
 };
 
+const mapStateToProps = createStructuredSelector({
+  loading: selectLoadingCheckoutAction,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   submitServiceNumberStart: (data) => dispatch(submitServiceNumberStart(data)),
 });
 
-export default connect(null, mapDispatchToProps)(ServiceNumber);
+export default connect(mapStateToProps, mapDispatchToProps)(ServiceNumber);

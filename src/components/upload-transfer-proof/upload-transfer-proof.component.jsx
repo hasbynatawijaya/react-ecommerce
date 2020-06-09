@@ -4,8 +4,11 @@ import FormUpload from "../form-upload/form-upload.component";
 import CustomButton from "../custom-button/custom-button.component";
 
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { selectCurrentUser } from "../../redux/user/user.selectors";
 
 import { uploadTransferProofStart } from "../../redux/checkout/checkout.actions";
+import { selectLoadingCheckoutAction } from "../../redux/checkout/checkout.selectors";
 
 class UploadTransferProof extends Component {
   constructor(props) {
@@ -34,26 +37,41 @@ class UploadTransferProof extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { uploadTransferProofStart, transactionId } = this.props;
+    const { uploadTransferProofStart, transactionId, currentUser } = this.props;
     const { imageAsFile } = this.state;
 
-    uploadTransferProofStart({ transactionId, imageAsFile });
+    uploadTransferProofStart({
+      transactionId,
+      imageAsFile,
+      userId: currentUser.id,
+    });
   };
 
   render() {
     const { imageUrl } = this.state;
+    const { loading } = this.props;
 
     return (
       <form onSubmit={this.handleSubmit}>
         <FormUpload onChange={this.handleImageAsFile} imageUrl={imageUrl} />
-        <CustomButton type="submit"> Upload Bukti Transfer </CustomButton>
+        <CustomButton type="submit">
+          {loading ? "loading" : "Upload Bukti Transfer "}
+        </CustomButton>
       </form>
     );
   }
 }
 
+const mapStateToProps = createStructuredSelector({
+  loading: selectLoadingCheckoutAction,
+  currentUser: selectCurrentUser,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   uploadTransferProofStart: (data) => dispatch(uploadTransferProofStart(data)),
 });
 
-export default connect(null, mapDispatchToProps)(UploadTransferProof);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UploadTransferProof);

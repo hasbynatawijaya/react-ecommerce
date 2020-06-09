@@ -1,5 +1,10 @@
 import CheckoutActionTypes from "./checkout.types";
 
+export const loadingCheckoutAction = (isLoading) => ({
+  type: CheckoutActionTypes.LOADING_CHECKOUT_ACTION,
+  payload: isLoading,
+});
+
 export const checkoutStart = (data) => ({
   type: CheckoutActionTypes.CHECKOUT_START,
   payload: data,

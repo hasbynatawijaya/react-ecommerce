@@ -18,6 +18,7 @@ import {
   selectShippingCost,
 } from "../../redux/shipping/shipping.selectors";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { selectLoadingCheckoutAction } from "../../redux/checkout/checkout.selectors";
 
 import FormInput from "../form-input/form-input.component";
 import FormSelect from "../form-select/form-select.component";
@@ -114,7 +115,15 @@ class CheckoutForm extends Component {
       city,
       shippingPackage,
     } = this.state;
-    const { provinceRes, cityRes, shippingCost, totalPrice } = this.props;
+    const {
+      provinceRes,
+      cityRes,
+      shippingCost,
+      totalPrice,
+      loading,
+    } = this.props;
+
+    console.log(loading);
 
     return (
       <CheckoutFormContainer>
@@ -199,7 +208,9 @@ class CheckoutForm extends Component {
           <p>
             Total Price {totalPrice + parseFloat(shippingPackage.split("-")[1])}
           </p>
-          <CustomButton>Pesan</CustomButton>
+          <CustomButton disabled={loading}>
+            {loading ? "loading" : "Pesan"}
+          </CustomButton>
         </form>
       </CheckoutFormContainer>
     );
@@ -218,6 +229,7 @@ const mapStateToProps = createStructuredSelector({
   cityRes: selectCity,
   shippingCost: selectShippingCost,
   currentUser: selectCurrentUser,
+  loading: selectLoadingCheckoutAction,
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CheckoutForm);

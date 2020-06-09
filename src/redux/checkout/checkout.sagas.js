@@ -1,20 +1,36 @@
 import { takeLatest, call, put, all } from "redux-saga/effects";
 import { storage } from "../../firebase/firebase.utils";
 import { firestore } from "../../firebase/firebase.utils";
+import { toastr } from "react-redux-toastr";
 
 import CheckoutActionTypes from "./checkout.types";
 
 import {
   fetchCheckoutDataSuccess,
   fetchCheckoutByUserIdSuccess,
+  loadingCheckoutAction,
 } from "./checkout.actions";
+
+import {
+  modalUploadTransferProof,
+  modalUploadServiceNumber,
+} from "../modal/modal.actions";
+
+import { clearCart } from "../cart/cart.actions";
 
 import { v4 as uuid } from "uuid";
 
 export function* checkout({ payload }) {
   try {
-    console.log(payload);
+    yield put(loadingCheckoutAction(true));
     yield firestore.collection("transactions").doc(uuid()).set(payload);
+
+    yield put(loadingCheckoutAction(false));
+    yield toastr.success("Sukses", "Berhasil membuat pesanan");
+    yield put(clearCart());
+    setTimeout(() => {
+      window.location.replace("/checkout/complete");
+    }, 1000);
   } catch (error) {
     console.log(error);
   }
@@ -56,7 +72,9 @@ export function* fetchCheckoutDataByUserId({ payload }) {
 }
 
 export function* uploadTransferProof({ payload }) {
-  const { transactionId, imageAsFile } = payload;
+  const { transactionId, imageAsFile, userId } = payload;
+
+  yield put(loadingCheckoutAction(true));
 
   try {
     const storageRef = storage.ref();
@@ -78,8 +96,13 @@ export function* uploadTransferProof({ payload }) {
       },
       { merge: true }
     );
+    yield put(loadingCheckoutAction(false));
+    yield toastr.success("Sukses", "Upload bukti transfer");
+    yield put(modalUploadTransferProof());
+    yield fetchCheckoutDataByUserId({ payload: userId });
   } catch (error) {
-    console.log(error);
+    yield put(loadingCheckoutAction(false));
+    yield toastr.success("Sukses", error);
   }
 }
 
@@ -87,6 +110,8 @@ export function* submitServiceNumber({ payload }) {
   const { transactionId, serviceNumberValue } = payload;
 
   try {
+    yield put(loadingCheckoutAction(true));
+
     const transcationRef = firestore
       .collection("transactions")
       .doc(transactionId);
@@ -98,8 +123,14 @@ export function* submitServiceNumber({ payload }) {
       },
       { merge: true }
     );
+
+    yield put(loadingCheckoutAction(false));
+    yield toastr.success("Sukses", "Upload isi nomor resi");
+    yield put(modalUploadServiceNumber());
+    yield fetchCheckoutData();
   } catch (error) {
-    console.log(error);
+    yield put(loadingCheckoutAction(false));
+    yield toastr.success("Error", error);
   }
 }
 

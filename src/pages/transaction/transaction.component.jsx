@@ -112,19 +112,35 @@ const Transaction = (props) => {
         <>
           <StatusText>{checkoutStatusConvert(col.status)}</StatusText>
           <AddressTitleText>Bukti Transfer</AddressTitleText>
-          <ModalImage
-            className="popup-image-small"
-            small={col.transferPhotoImageUrl}
-            large={col.transferPhotoImageUrl}
-            alt="Bukti Transfer"
-          />
-          <i>*klik gambar untuk memperbesar</i>
+          {col.transferPhotoImageUrl ? (
+            <>
+              <ModalImage
+                className="popup-image-small"
+                small={col.transferPhotoImageUrl}
+                large={col.transferPhotoImageUrl}
+                alt="Bukti Transfer"
+              />
+              <i>*klik gambar untuk memperbesar</i>{" "}
+            </>
+          ) : (
+            <AddressContentText>
+              <i>*Pesanan belum dibayar</i>
+            </AddressContentText>
+          )}
         </>
       ),
       serviceNumber: (
         <>
+          <div style={{ cursor: "now" }}></div>
           <Button
-            onClick={() => handleModalServiceNumber(col.serviceNumber, col.id)}
+            style={{
+              cursor: col.status === "process" ? "not-allowed" : "pointer",
+            }}
+            onClick={() =>
+              col.status === "process"
+                ? null
+                : handleModalServiceNumber(col.serviceNumber, col.id)
+            }
           >
             {col.status === "accepted" ? "Edit No.Resi" : "Setujui Pesanan"}
           </Button>

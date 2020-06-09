@@ -1,6 +1,7 @@
 import CheckoutActionTypes from "./checkout.types";
 
 const INITIAL_STATE = {
+  loadingCheckoutAction: false,
   loading: false,
   errorMessage: "",
   checkoutData: [],
@@ -9,6 +10,11 @@ const INITIAL_STATE = {
 
 const directoryReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case CheckoutActionTypes.LOADING_CHECKOUT_ACTION:
+      return {
+        ...state,
+        loadingCheckoutAction: action.payload,
+      };
     case CheckoutActionTypes.CHECKOUT_START:
       return {
         ...state,
