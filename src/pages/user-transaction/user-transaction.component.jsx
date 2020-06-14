@@ -11,6 +11,7 @@ import checkoutStatusConvert from "../../utils/convert-checkout-status";
 import Table from "../../components/table/table.component";
 import Button from "../../components/custom-button/custom-button.component";
 import UploadTransferProof from "../../components/upload-transfer-proof/upload-transfer-proof.component";
+import Filter from "../../components/transaction-filter/transaction-filter.component";
 
 import {
   Header,
@@ -57,7 +58,11 @@ const UserTransaction = (props) => {
   };
 
   React.useEffect(() => {
-    fetchCheckoutByUserIdStart(currentUser.id);
+    fetchCheckoutByUserIdStart({
+      userId: currentUser.id,
+      status: "choose",
+      date: [new Date(), new Date()],
+    });
   }, []);
 
   React.useEffect(() => {
@@ -144,10 +149,9 @@ const UserTransaction = (props) => {
     setTableData(dataSource);
   }, [checkoutDataByUserId]);
 
-  console.log(imagePopUp);
-
   return (
     <div>
+      <Filter transactionType="user" userId={currentUser.id} />
       <Table
         tableHead={["Barang", "Pengiriman", "Kurir", "Total Harga", "Status"]}
         tableData={tableData}

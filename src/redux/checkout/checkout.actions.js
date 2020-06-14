@@ -10,8 +10,9 @@ export const checkoutStart = (data) => ({
   payload: data,
 });
 
-export const fetchCheckoutDataStart = () => ({
+export const fetchCheckoutDataStart = (data) => ({
   type: CheckoutActionTypes.FETCH_CHECKOUT_DATA_START,
+  payload: data,
 });
 
 export const fetchCheckoutDataSuccess = (data) => ({
@@ -37,4 +38,9 @@ export const uploadTransferProofStart = (data) => ({
 export const submitServiceNumberStart = (data) => ({
   type: CheckoutActionTypes.SUBMIT_SERVICE_NUMBER_START,
   payload: data,
+});
+
+export const rejectTransaction = (transactionId) => ({
+  type: CheckoutActionTypes.REJECT_TRANSACTION,
+  payload: transactionId,
 });

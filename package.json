@@ -4,6 +4,7 @@
   "proxy": "http://localhost:5000",
   "private": true,
   "dependencies": {
+    "@wojtekmaj/react-daterange-picker": "^3.0.0",
     "axios": "^0.19.2",
     "firebase": "6.0.2",
     "http-proxy-middleware": "^1.0.4",

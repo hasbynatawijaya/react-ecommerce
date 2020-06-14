@@ -25,6 +25,7 @@ import AddProduct from "./components/add-product/add-product.component";
 import Category from "./pages/category/category.component";
 import MasterProductPages from "./pages/master-product/master-product.component";
 import Transaction from "./pages/transaction/transaction.component";
+import CheckoutComplete from "./pages/checkout-complete/checkout-complete.component";
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -41,6 +42,13 @@ class App extends React.Component {
           exact
           path="/checkout"
           component={CheckoutPage}
+          layout={MainLayout}
+          needAuth
+        />
+        <RouteWithLayout
+          exact
+          path="/checkout/complete"
+          component={CheckoutComplete}
           layout={MainLayout}
           needAuth
         />

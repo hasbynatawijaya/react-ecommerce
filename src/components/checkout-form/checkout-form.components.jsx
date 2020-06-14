@@ -44,6 +44,8 @@ class CheckoutForm extends Component {
 
   componentDidMount() {
     const { fetchProvinceStart } = this.props;
+    const createdAt = moment().startOf("day").toString();
+    console.log(createdAt);
 
     fetchProvinceStart();
   }
@@ -77,6 +79,11 @@ class CheckoutForm extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
+    const createdAt = new Date(moment().startOf("day").toString());
+    const expiredAt = new Date(
+      moment().add(2, "days").startOf("day").format("DD MMMM YYYY")
+    );
+
     const { checkoutStart, currentUser, totalPrice, items } = this.props;
     const { shippingPackage, province, city } = this.state;
 
@@ -100,8 +107,8 @@ class CheckoutForm extends Component {
       status: "process",
       transferPhotoImageUrl: "",
       userId: currentUser.id,
-      createdAt: moment().locale("id").format("DD MMMM YYYY"),
-      expiredAt: moment().add(2, "days").locale("id").format("DD MMMM YYYY"),
+      createdAt,
+      expiredAt,
     });
   };
 

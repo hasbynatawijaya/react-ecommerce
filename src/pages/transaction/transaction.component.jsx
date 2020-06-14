@@ -8,6 +8,7 @@ import checkoutStatusConvert from "../../utils/convert-checkout-status";
 
 import Table from "../../components/table/table.component";
 import Button from "../../components/custom-button/custom-button.component";
+import TransactionFilter from "../../components/transaction-filter/transaction-filter.component";
 
 import "./transaction.styles.scss";
 
@@ -26,10 +27,16 @@ import {
   StatusText,
 } from "./transaction.styles";
 
-import { fetchCheckoutDataStart } from "../../redux/checkout/checkout.actions";
+import {
+  fetchCheckoutDataStart,
+  rejectTransaction,
+} from "../../redux/checkout/checkout.actions";
 import { modalUploadServiceNumber } from "../../redux/modal/modal.actions";
 
-import { selectCheckoutData } from "../../redux/checkout/checkout.selectors";
+import {
+  selectCheckoutData,
+  selectLoadingCheckoutAction,
+} from "../../redux/checkout/checkout.selectors";
 import { selectModalServiceNumber } from "../../redux/modal/modal.selectors";
 import ServiceNumber from "../../components/service-number/service-number.component";
 
@@ -42,6 +49,8 @@ const Transaction = (props) => {
     checkoutData,
     isOpenModalServiceNumber,
     modalUploadServiceNumber,
+    loading,
+    rejectTransaction,
   } = props;
 
   const handleModalServiceNumber = (serviceNumber, transactionId) => {
@@ -53,7 +62,10 @@ const Transaction = (props) => {
 
   React.useEffect(() => {
     const { fetchCheckoutDataStart } = props;
-    fetchCheckoutDataStart();
+    fetchCheckoutDataStart({
+      status: "choose",
+      date: [new Date(), new Date()],
+    });
   }, []);
 
   React.useEffect(() => {
@@ -134,15 +146,34 @@ const Transaction = (props) => {
           <div style={{ cursor: "now" }}></div>
           <Button
             style={{
-              cursor: col.status === "process" ? "not-allowed" : "pointer",
+              cursor:
+                col.status === "process" || "rejected"
+                  ? "not-allowed"
+                  : "pointer",
             }}
             onClick={() =>
-              col.status === "process"
+              col.status === "process" || "rejected"
                 ? null
                 : handleModalServiceNumber(col.serviceNumber, col.id)
             }
           >
             {col.status === "accepted" ? "Edit No.Resi" : "Setujui Pesanan"}
+          </Button>
+          <Button
+            style={{
+              marginTop: "10px",
+              cursor:
+                col.status === "accepted" || col.status === "rejected"
+                  ? "not-allowed"
+                  : "pointer",
+            }}
+            onClick={() =>
+              col.status === "accepted" || col.status === "rejected"
+                ? null
+                : rejectTransaction(col.id)
+            }
+          >
+            {loading ? "loading" : "Tolak Pesanan"}
           </Button>
         </>
       ),
@@ -153,6 +184,7 @@ const Transaction = (props) => {
 
   return (
     <div>
+      <TransactionFilter transactionType="admin" />
       <Table
         tableHead={[
           "Barang",
@@ -178,11 +210,14 @@ const Transaction = (props) => {
 const mapStateToProps = createStructuredSelector({
   checkoutData: selectCheckoutData,
   isOpenModalServiceNumber: selectModalServiceNumber,
+  loading: selectLoadingCheckoutAction,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   fetchCheckoutDataStart: () => dispatch(fetchCheckoutDataStart()),
   modalUploadServiceNumber: () => dispatch(modalUploadServiceNumber()),
+  rejectTransaction: (transactionId) =>
+    dispatch(rejectTransaction(transactionId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);
