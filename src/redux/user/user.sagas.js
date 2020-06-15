@@ -65,6 +65,9 @@ export function* isUserAuthenticated() {
 export function* signOut() {
   try {
     yield auth.signOut();
+
+    window.location.replace("/");
+
     yield put(signOutSuccess());
   } catch (error) {
     yield put(signOutFailure(error));

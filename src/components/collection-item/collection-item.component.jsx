@@ -1,7 +1,10 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
-import { addItem } from '../../redux/cart/cart.actions';
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+
+import { addItem } from "../../redux/cart/cart.actions";
 
 import {
   CollectionItemContainer,
@@ -9,31 +12,38 @@ import {
   AddButton,
   BackgroundImage,
   NameContainer,
-  PriceContainer
-} from './collection-styles.styles';
+  PriceContainer,
+} from "./collection-styles.styles";
 
-const CollectionItem = ({ item, addItem }) => {
+const CollectionItem = ({ item, addItem, currentUser }) => {
   const { name, price, imageUrl } = item;
 
   return (
     <CollectionItemContainer>
-      <BackgroundImage className='image' imageUrl={imageUrl} />
+      <BackgroundImage className="image" imageUrl={imageUrl} />
       <CollectionFooterContainer>
         <NameContainer>{name}</NameContainer>
         <PriceContainer>{price}</PriceContainer>
       </CollectionFooterContainer>
-      <AddButton onClick={() => addItem(item)} inverted>
-        Add to cart
-      </AddButton>
+      {currentUser ? (
+        <AddButton onClick={() => addItem(item)} inverted>
+          Tambah ke keranjang
+        </AddButton>
+      ) : (
+        <AddButton onClick={() => window.location.replace("/signin")} inverted>
+          Login untuk membeli
+        </AddButton>
+      )}
     </CollectionItemContainer>
   );
 };
 
-const mapDispatchToProps = dispatch => ({
-  addItem: item => dispatch(addItem(item))
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
 });
 
-export default connect(
-  null,
-  mapDispatchToProps
-)(CollectionItem);
+const mapDispatchToProps = (dispatch) => ({
+  addItem: (item) => dispatch(addItem(item)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CollectionItem);
