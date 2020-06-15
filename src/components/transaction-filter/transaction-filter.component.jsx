@@ -16,6 +16,7 @@ const TransactionFilter = ({
   fetchCheckoutDataStart,
   transactionType,
   userId,
+  cbHandleFilterPayload,
 }) => {
   const [date, setDate] = React.useState([new Date(), new Date()]);
   const [status, setStatus] = React.useState("choose");
@@ -24,6 +25,7 @@ const TransactionFilter = ({
     const value = e.target.value;
 
     setStatus(value);
+    cbHandleFilterPayload({ status: value, date });
 
     if (transactionType === "admin") {
       if (value === "choose") {

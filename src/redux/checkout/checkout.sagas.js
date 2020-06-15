@@ -10,6 +10,8 @@ import {
   fetchCheckoutDataSuccess,
   fetchCheckoutByUserIdSuccess,
   loadingCheckoutAction,
+  fetchCheckoutDataStart,
+  fetchCheckoutByUserIdStart,
 } from "./checkout.actions";
 
 import {
@@ -114,7 +116,7 @@ export function* fetchCheckoutDataByUserId({ payload }) {
 }
 
 export function* uploadTransferProof({ payload }) {
-  const { transactionId, imageAsFile, userId } = payload;
+  const { transactionId, imageAsFile, userId, status, date } = payload;
 
   yield put(loadingCheckoutAction(true));
 
@@ -141,7 +143,7 @@ export function* uploadTransferProof({ payload }) {
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Sukses", "Upload bukti transfer");
     yield put(modalUploadTransferProof());
-    yield fetchCheckoutDataByUserId({ payload: userId });
+    yield put(fetchCheckoutByUserIdStart({ userId, status, date }));
   } catch (error) {
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Sukses", error);
@@ -149,7 +151,7 @@ export function* uploadTransferProof({ payload }) {
 }
 
 export function* submitServiceNumber({ payload }) {
-  const { transactionId, serviceNumberValue } = payload;
+  const { transactionId, serviceNumberValue, status, date } = payload;
 
   try {
     yield put(loadingCheckoutAction(true));
@@ -169,7 +171,7 @@ export function* submitServiceNumber({ payload }) {
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Sukses", "Upload isi nomor resi");
     yield put(modalUploadServiceNumber());
-    yield fetchCheckoutData();
+    yield put(fetchCheckoutDataStart({ status, date }));
   } catch (error) {
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Error", error);
@@ -177,10 +179,13 @@ export function* submitServiceNumber({ payload }) {
 }
 
 export function* rejectTransaction({ payload }) {
+  const { transactionId, status, date } = payload;
   try {
     yield put(loadingCheckoutAction(true));
 
-    const transcationRef = firestore.collection("transactions").doc(payload);
+    const transcationRef = firestore
+      .collection("transactions")
+      .doc(transactionId);
 
     yield transcationRef.set(
       {
@@ -191,7 +196,7 @@ export function* rejectTransaction({ payload }) {
 
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Sukses", "Transaksi ditolak");
-    yield fetchCheckoutData();
+    yield put(fetchCheckoutDataStart({ status, date }));
   } catch (error) {
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Error", error);

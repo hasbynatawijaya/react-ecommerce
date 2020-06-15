@@ -131,14 +131,6 @@ class EditProduct extends Component {
             required
           />
           <FormInput
-            name="stock"
-            type="number"
-            value={stock}
-            handleChange={this.handleChange}
-            label="Jumlah stok"
-            required
-          />
-          <FormInput
             name="weight"
             type="number"
             value={weight}

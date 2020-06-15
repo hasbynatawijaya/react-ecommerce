@@ -78,7 +78,6 @@ const MasterProduct = (props) => {
         ),
         Name: col.name,
         Price: col.price,
-        Stock: col.stock,
         Weight: col.weight,
         Action: (
           <>
@@ -126,7 +125,6 @@ const MasterProduct = (props) => {
           "Photo",
           "Nama Produk",
           "Harga",
-          "Stok",
           "Berat (gram)",
           "Aksi",
         ]}

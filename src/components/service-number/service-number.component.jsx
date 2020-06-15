@@ -14,6 +14,7 @@ const ServiceNumber = ({
   serviceNumber,
   submitServiceNumberStart,
   loading,
+  filterPayload,
 }) => {
   const [serviceNumberValue, setServiceNumberValue] = React.useState(
     serviceNumber
@@ -28,7 +29,11 @@ const ServiceNumber = ({
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    submitServiceNumberStart({ transactionId, serviceNumberValue });
+    submitServiceNumberStart({
+      transactionId,
+      serviceNumberValue,
+      ...filterPayload,
+    });
   };
 
   return (

@@ -37,13 +37,19 @@ class UploadTransferProof extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
 
-    const { uploadTransferProofStart, transactionId, currentUser } = this.props;
+    const {
+      uploadTransferProofStart,
+      transactionId,
+      currentUser,
+      filterPayload,
+    } = this.props;
     const { imageAsFile } = this.state;
 
     uploadTransferProofStart({
       transactionId,
       imageAsFile,
       userId: currentUser.id,
+      ...filterPayload,
     });
   };
 

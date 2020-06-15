@@ -11,6 +11,7 @@
     "moment": "^2.26.0",
     "node-sass": "4.12.0",
     "react": "^16.8.6",
+    "react-data-export": "^0.6.0",
     "react-dom": "^16.8.6",
     "react-modal": "^3.11.2",
     "react-modal-image": "^2.5.0",
@@ -18,6 +19,7 @@
     "react-redux-toastr": "^7.6.5",
     "react-router-dom": "5.0.0",
     "react-stripe-checkout": "2.6.3",
+    "recharts": "^1.8.5",
     "redux": "4.0.1",
     "redux-logger": "3.0.6",
     "redux-persist": "5.10.0",
@@ -25,7 +27,8 @@
     "redux-thunk": "2.3.0",
     "reselect": "4.0.0",
     "styled-components": "4.2.0",
-    "uuid": "^8.1.0"
+    "uuid": "^8.1.0",
+    "xlsx": "^0.16.2"
   },
   "devDependencies": {
     "react-scripts": "3.0.0"

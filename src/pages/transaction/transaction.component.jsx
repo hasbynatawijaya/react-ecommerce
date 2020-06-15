@@ -44,6 +44,10 @@ const Transaction = (props) => {
   const [tableData, setTableData] = React.useState([]);
   const [serviceNumber, setServiceNumber] = React.useState("");
   const [transactionId, setTransactionId] = React.useState(null);
+  const [filterPayload, setFilterPayload] = React.useState({
+    status: "choose",
+    date: [new Date(), new Date()],
+  });
 
   const {
     checkoutData,
@@ -60,11 +64,18 @@ const Transaction = (props) => {
     setTransactionId(transactionId);
   };
 
+  const handleFilterPayload = (payload) => {
+    setFilterPayload(payload);
+  };
+
   React.useEffect(() => {
     const { fetchCheckoutDataStart } = props;
+
+    const today = new Date();
+
     fetchCheckoutDataStart({
       status: "choose",
-      date: [new Date(), new Date()],
+      date: [today, today],
     });
   }, []);
 
@@ -147,12 +158,12 @@ const Transaction = (props) => {
           <Button
             style={{
               cursor:
-                col.status === "process" || "rejected"
+                col.status === "process" || col.status === "rejected"
                   ? "not-allowed"
                   : "pointer",
             }}
             onClick={() =>
-              col.status === "process" || "rejected"
+              col.status === "process" || col.status === "rejected"
                 ? null
                 : handleModalServiceNumber(col.serviceNumber, col.id)
             }
@@ -170,7 +181,7 @@ const Transaction = (props) => {
             onClick={() =>
               col.status === "accepted" || col.status === "rejected"
                 ? null
-                : rejectTransaction(col.id)
+                : rejectTransaction({ transactionId: col.id, ...filterPayload })
             }
           >
             {loading ? "loading" : "Tolak Pesanan"}
@@ -184,7 +195,10 @@ const Transaction = (props) => {
 
   return (
     <div>
-      <TransactionFilter transactionType="admin" />
+      <TransactionFilter
+        transactionType="admin"
+        cbHandleFilterPayload={handleFilterPayload}
+      />
       <Table
         tableHead={[
           "Barang",
@@ -201,6 +215,7 @@ const Transaction = (props) => {
         <ServiceNumber
           serviceNumber={serviceNumber}
           transactionId={transactionId}
+          filterPayload={filterPayload}
         />
       </Modal>
     </div>
@@ -214,7 +229,7 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchCheckoutDataStart: () => dispatch(fetchCheckoutDataStart()),
+  fetchCheckoutDataStart: (data) => dispatch(fetchCheckoutDataStart(data)),
   modalUploadServiceNumber: () => dispatch(modalUploadServiceNumber()),
   rejectTransaction: (transactionId) =>
     dispatch(rejectTransaction(transactionId)),

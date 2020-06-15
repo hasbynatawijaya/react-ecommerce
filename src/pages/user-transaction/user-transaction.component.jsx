@@ -42,6 +42,10 @@ const UserTransaction = (props) => {
     isOpen: false,
     src: "",
   });
+  const [filterPayload, setFilterPayload] = React.useState({
+    status: "choose",
+    date: [new Date(), new Date()],
+  });
 
   const {
     checkoutDataByUserId,
@@ -55,6 +59,10 @@ const UserTransaction = (props) => {
     modalUploadTransferProof();
 
     setTransactionId(transactionId);
+  };
+
+  const handleFilterPayload = (payload) => {
+    setFilterPayload(payload);
   };
 
   React.useEffect(() => {
@@ -151,14 +159,21 @@ const UserTransaction = (props) => {
 
   return (
     <div>
-      <Filter transactionType="user" userId={currentUser.id} />
+      <Filter
+        transactionType="user"
+        userId={currentUser.id}
+        cbHandleFilterPayload={handleFilterPayload}
+      />
       <Table
         tableHead={["Barang", "Pengiriman", "Kurir", "Total Harga", "Status"]}
         tableData={tableData}
       />
       <Modal isOpen={isOpenModalUploadTransferProof}>
         <button onClick={modalUploadTransferProof}>close</button>
-        <UploadTransferProof transactionId={transactionId} />
+        <UploadTransferProof
+          transactionId={transactionId}
+          filterPayload={filterPayload}
+        />
       </Modal>
     </div>
   );
