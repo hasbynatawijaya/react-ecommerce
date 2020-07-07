@@ -1,8 +1,11 @@
 import UserActionTypes from "./user.types";
+import { getAddressById } from "./user.utils";
 
 const INITIAL_STATE = {
   currentUser: null,
   error: null,
+  loadingUserAddressAction: false,
+  userAddressById: null,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -25,6 +28,16 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         error: action.payload,
+      };
+    case UserActionTypes.LOADING_USER_ADDRESS_ACTION:
+      return {
+        ...state,
+        loadingUserAddressAction: action.payload,
+      };
+    case UserActionTypes.GET_USER_ADDRESS_BY_ID:
+      return {
+        ...state,
+        userAddressById: getAddressById(state.currentUser, action.payload),
       };
     default:
       return state;

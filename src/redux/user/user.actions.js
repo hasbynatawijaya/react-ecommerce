@@ -52,3 +52,23 @@ export const signUpFailure = (error) => ({
   type: UserActionTypes.SIGN_UP_FAILURE,
   payload: error,
 });
+
+export const addUserAddressStart = (data) => ({
+  type: UserActionTypes.ADD_USER_ADDRESS,
+  payload: data,
+});
+
+export const editUserAddressStart = (data) => ({
+  type: UserActionTypes.EDIT_USER_ADDRESS,
+  payload: data,
+});
+
+export const loadingUserAddressAction = (isLoading) => ({
+  type: UserActionTypes.LOADING_USER_ADDRESS_ACTION,
+  payload: isLoading,
+});
+
+export const getUserAddressById = (addressId) => ({
+  type: UserActionTypes.GET_USER_ADDRESS_BY_ID,
+  payload: addressId,
+});

@@ -26,6 +26,7 @@ const Header = ({ currentUser, hidden, signOutStart }) => {
         menu.push(<OptionLink to="/dashboard">Dashboard</OptionLink>);
       } else if (currentUser.role === "user") {
         menu.push(<OptionLink to="/transaction">Transaksi</OptionLink>);
+        menu.push(<OptionLink to="/me">Akun saya</OptionLink>);
       }
     }
 

@@ -45,7 +45,6 @@ class CheckoutForm extends Component {
   componentDidMount() {
     const { fetchProvinceStart } = this.props;
     const createdAt = moment().startOf("day").toString();
-    console.log(createdAt);
 
     fetchProvinceStart();
   }

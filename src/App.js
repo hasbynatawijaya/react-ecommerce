@@ -2,7 +2,11 @@ import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import RouteWithLayout from "./components/route-with-layout/route-with-layout.component";
+
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { ThemeProvider } from "@material-ui/core/styles";
+
+import Container from "@material-ui/core/Container";
 
 import "./App.css";
 import "react-redux-toastr/lib/css/react-redux-toastr.min.css";
@@ -17,6 +21,7 @@ import { checkUserSession } from "./redux/user/user.actions";
 
 import { selectCurrentUser } from "./redux/user/user.selectors";
 
+import RouteWithLayout from "./components/route-with-layout/route-with-layout.component";
 import MainLayout from "./layout/main-layout.component";
 import DashboardLayout from "./layout/dashboard-layout.component";
 
@@ -26,6 +31,7 @@ import Category from "./pages/category/category.component";
 import MasterProductPages from "./pages/master-product/master-product.component";
 import Transaction from "./pages/transaction/transaction.component";
 import CheckoutComplete from "./pages/checkout-complete/checkout-complete.component";
+import MyAccount from "./pages/my-account/my-account.component";
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -87,47 +93,57 @@ class App extends React.Component {
           layout={DashboardLayout}
           needAuth
         />
+        <RouteWithLayout
+          exact
+          path="/me"
+          component={MyAccount}
+          layout={MainLayout}
+          needAuth
+        />
       </>
     );
 
     return (
-      <div>
-        <Switch>
-          <RouteWithLayout
-            exact
-            path="/"
-            component={HomePage}
-            layout={MainLayout}
-            needAuth={false}
-          />
-          <RouteWithLayout
-            path="/shop"
-            component={ShopPage}
-            layout={MainLayout}
-            needAuth={false}
-          />
-          <RouteWithLayout
-            exact
-            path="/transaction"
-            component={UserTransactionPage}
-            layout={MainLayout}
-            needAuth={false}
-          />
-          <Route
-            exact
-            path="/signin"
-            render={() =>
-              this.props.currentUser ? (
-                <Redirect to="/" />
-              ) : (
-                <SignInAndSignUpPage />
-              )
-            }
-            needAuth={false}
-          />
-          {this.props.currentUser !== null && authRoute}
-        </Switch>
-      </div>
+      <Container maxWidth="lg">
+        <ThemeProvider>
+          <CssBaseline />
+          <Switch>
+            <RouteWithLayout
+              exact
+              path="/"
+              component={HomePage}
+              layout={MainLayout}
+              needAuth={false}
+            />
+            <RouteWithLayout
+              path="/shop"
+              component={ShopPage}
+              layout={MainLayout}
+              needAuth={false}
+            />
+            <RouteWithLayout
+              exact
+              path="/transaction"
+              component={UserTransactionPage}
+              layout={MainLayout}
+              needAuth={false}
+            />
+            <Route
+              exact
+              path="/signin"
+              render={() =>
+                this.props.currentUser ? (
+                  <Redirect to="/" />
+                ) : (
+                  <SignInAndSignUpPage />
+                )
+              }
+              needAuth={false}
+            />
+            {this.props.currentUser !== null && authRoute}
+          </Switch>
+        </ThemeProvider>
+      </Container>
     );
   }
 }

@@ -1,4 +1,5 @@
 import { takeLatest, put, all, call } from "redux-saga/effects";
+import { v4 as uuid } from "uuid";
 
 import userActionTypes from "./user.types";
 
@@ -9,13 +10,18 @@ import {
   signOutFailure,
   signUpSuccess,
   signUpFailure,
+  loadingUserAddressAction,
+  checkUserSession,
 } from "./user.actions";
+
+import { modalAddAddress, modalEditAddress } from "../modal/modal.actions";
 
 import {
   auth,
   googleProvider,
   createUserProfileDocument,
   getCurrentUser,
+  firestore,
 } from "../../firebase/firebase.utils";
 
 export function* getSnapShotFromUserAuth(userAuth, additionalData) {
@@ -85,11 +91,70 @@ export function* signUp({ payload: { email, password, displayName } }) {
           displayName,
           cart: [],
           role: "user",
+          address: [],
         },
       })
     );
   } catch (error) {
     yield put(signUpFailure(error));
+  }
+}
+
+export function* addUserAddress({ payload }) {
+  try {
+    yield put(loadingUserAddressAction(true));
+
+    const ref = firestore.collection("users").doc(payload.userId);
+
+    const snapshot = yield ref.get();
+    const allAddress = [...(yield snapshot.data().address)];
+
+    allAddress.push({ id: uuid(), ...payload.address });
+
+    yield ref.set(
+      {
+        address: [...allAddress],
+      },
+      { merge: true }
+    );
+
+    yield put(checkUserSession());
+    yield put(loadingUserAddressAction(false));
+    yield put(modalAddAddress(false));
+  } catch (error) {
+    yield put(loadingUserAddressAction(false));
+    console.log(error);
+  }
+}
+
+export function* editUserAddress({ payload }) {
+  try {
+    yield put(loadingUserAddressAction(true));
+
+    const ref = firestore.collection("users").doc(payload.userId);
+
+    const snapshot = yield ref.get();
+    const allAddress = [...(yield snapshot.data().address)];
+
+    const selectedIndex = allAddress.findIndex(
+      (address) => address.id === payload.address.id
+    );
+
+    allAddress[selectedIndex] = payload.address;
+
+    yield ref.set(
+      {
+        address: [...allAddress],
+      },
+      { merge: true }
+    );
+
+    yield put(checkUserSession());
+    yield put(loadingUserAddressAction(false));
+    yield put(modalEditAddress(false));
+  } catch (error) {
+    yield put(loadingUserAddressAction(false));
+    console.log(error);
   }
 }
 
@@ -121,6 +186,14 @@ export function* onSignUpSuccess() {
   yield takeLatest(userActionTypes.SIGN_UP_SUCCESS, signInAfterSignUp);
 }
 
+export function* onAdduserAddress() {
+  yield takeLatest(userActionTypes.ADD_USER_ADDRESS, addUserAddress);
+}
+
+export function* onEditUserAddress() {
+  yield takeLatest(userActionTypes.EDIT_USER_ADDRESS, editUserAddress);
+}
+
 export function* userSagas() {
   yield all([
     call(onGoogleSignInStart),
@@ -129,5 +202,7 @@ export function* userSagas() {
     call(onSignOutStart),
     call(onSignUpStart),
     call(onSignUpSuccess),
+    call(onAdduserAddress),
+    call(onEditUserAddress),
   ]);
 }

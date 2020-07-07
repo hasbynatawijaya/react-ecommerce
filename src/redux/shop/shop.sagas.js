@@ -88,6 +88,8 @@ export function* addCollectionAsync({ payload }) {
             name: data.name,
             stock: data.stock,
             weight: data.weight,
+            description: data.description,
+            isFavourite: data.isFavourite,
           },
         ],
       },
@@ -135,6 +137,8 @@ export function* editCollectionAsync({ payload }) {
       name: data.name,
       stock: data.stock,
       weight: data.weight,
+      description: data.description,
+      isFavourite: data.isFavourite,
     };
 
     yield ref.set(

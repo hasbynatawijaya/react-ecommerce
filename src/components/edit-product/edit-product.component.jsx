@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import FormInput from "../form-input/form-input.component";
 import FormSelect from "../form-select/form-select.component";
 import FormUpload from "../form-upload/form-upload.component";
+import FormTextArea from "../form-text-area/form-text-area.component";
 import CustomButton from "../custom-button/custom-button.component";
 
 import { EditProductContainer } from "./edit-product.styles";
@@ -32,6 +33,8 @@ class EditProduct extends Component {
       weight: "",
       imageAsFile: "",
       imageUrl: null,
+      description: "",
+      isFavourite: "no",
     };
   }
 
@@ -47,6 +50,8 @@ class EditProduct extends Component {
           stock,
           categoryId,
           weight,
+          description,
+          isFavourite,
         },
       } = this.props;
 
@@ -57,6 +62,8 @@ class EditProduct extends Component {
         imageUrl,
         category: categoryId,
         weight,
+        description,
+        isFavourite,
       });
     }
   }
@@ -96,7 +103,16 @@ class EditProduct extends Component {
   };
 
   render() {
-    const { name, price, stock, category, imageUrl, weight } = this.state;
+    const {
+      name,
+      price,
+      stock,
+      category,
+      imageUrl,
+      weight,
+      description,
+      isFavourite,
+    } = this.state;
     const { collectionCategory, loading } = this.props;
 
     return (
@@ -138,6 +154,31 @@ class EditProduct extends Component {
             label="Berat (gram)"
             required
           />
+          <FormInput
+            name="stock"
+            type="number"
+            value={stock}
+            handleChange={this.handleChange}
+            label="Jumlah Stok"
+            required
+          />
+          <FormTextArea
+            name="description"
+            type="text"
+            value={description}
+            handleChange={this.handleChange}
+            label="Deskripsi produk"
+            required
+          />
+          <FormSelect
+            value={isFavourite}
+            label="Produk Favorit"
+            name="isFavourite"
+            onChange={this.handleChange}
+          >
+            <option value={"no"}>Tidak</option>
+            <option value={"yes"}>Ya</option>
+          </FormSelect>
           <CustomButton disabled={loading} type="submit">
             {loading ? "loading" : "edit produk"}
           </CustomButton>

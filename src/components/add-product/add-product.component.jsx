@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import FormInput from "../form-input/form-input.component";
 import FormSelect from "../form-select/form-select.component";
 import FormUpload from "../form-upload/form-upload.component";
+import FormTextArea from "../form-text-area/form-text-area.component";
 import CustomButton from "../custom-button/custom-button.component";
 
 import { AddProductContainer } from "./add-product.styles";
@@ -29,6 +30,8 @@ class AddProduct extends Component {
       category: "choose",
       weight: "",
       imageAsFile: "",
+      description: "",
+      isFavourite: "no",
       imageUrl: null,
     };
   }
@@ -63,7 +66,16 @@ class AddProduct extends Component {
   };
 
   render() {
-    const { name, price, stock, category, imageUrl, weight } = this.state;
+    const {
+      name,
+      price,
+      stock,
+      category,
+      imageUrl,
+      weight,
+      description,
+      isFavourite,
+    } = this.state;
     const { collectionCategory, loading } = this.props;
 
     return (
@@ -105,6 +117,31 @@ class AddProduct extends Component {
             label="Berat (gram)"
             required
           />
+          <FormInput
+            name="stock"
+            type="number"
+            value={stock}
+            handleChange={this.handleChange}
+            label="Jumlah Stok"
+            required
+          />
+          <FormTextArea
+            name="description"
+            type="text"
+            value={description}
+            handleChange={this.handleChange}
+            label="Deskripsi produk"
+            required
+          />
+          <FormSelect
+            value={isFavourite}
+            label="Produk Favorit"
+            name="isFavourite"
+            onChange={this.handleChange}
+          >
+            <option value={"no"}>Tidak</option>
+            <option value={"yes"}>Ya</option>
+          </FormSelect>
           <CustomButton disabled={loading} type="submit">
             {loading ? "loading" : "Tambah Produk"}
           </CustomButton>

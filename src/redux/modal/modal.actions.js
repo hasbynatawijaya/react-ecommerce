@@ -23,3 +23,11 @@ export const modalUploadTransferProof = () => ({
 export const modalUploadServiceNumber = () => ({
   type: ModalActionTypes.IS_OPEN_MODAL_SERVICE_NUMBER,
 });
+
+export const modalAddAddress = () => ({
+  type: ModalActionTypes.IS_OPEN_MODAL_ADD_ADDRESS,
+});
+
+export const modalEditAddress = () => ({
+  type: ModalActionTypes.IS_OPEN_MODAL_EDIT_ADDRESS,
+});

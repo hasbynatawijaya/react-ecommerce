@@ -31,3 +31,13 @@ export const selectModalServiceNumber = createSelector(
   [selectModal],
   (modal) => modal.isOpenModalServiceNumber
 );
+
+export const selectModalAddAddress = createSelector(
+  [selectModal],
+  (modal) => modal.isOpenModalAddAddress
+);
+
+export const selectModalEditAddress = createSelector(
+  [selectModal],
+  (modal) => modal.isOpenModalEditAddress
+);
