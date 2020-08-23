@@ -16,7 +16,7 @@ const HomePage = () => (
     <Box mt={4} mb={4}>
       <Typography variant="h3">Cara membuat pudding</Typography>
     </Box>
-    <Box mb={6}>
+    <Box mb={6} mt={3}>
       <video src={Video} controls="controls" />
     </Box>
   </HomePageContainer>

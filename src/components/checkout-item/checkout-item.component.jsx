@@ -7,33 +7,25 @@ import {
   removeItem,
 } from "../../redux/cart/cart.actions";
 
-import {
-  CheckoutItemContainer,
-  ImageContainer,
-  TextContainer,
-  QuantityContainer,
-  RemoveButtonContainer,
-} from "./checkout-item.styles";
+import Grid from "@material-ui/core/Grid";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 
-const CheckoutItem = ({ cartItem, clearItem, addItem, removeItem }) => {
+const CheckoutItem = ({ cartItem }) => {
   const { name, imageUrl, price, quantity, weight } = cartItem;
   return (
-    <CheckoutItemContainer>
-      <ImageContainer>
-        <img src={imageUrl} alt="item" />
-      </ImageContainer>
-      <TextContainer>{name}</TextContainer>
-      <TextContainer>{weight}gr</TextContainer>
-      <QuantityContainer>
-        <div onClick={() => removeItem(cartItem)}>&#10094;</div>
-        <span>{quantity}</span>
-        <div onClick={() => addItem(cartItem)}>&#10095;</div>
-      </QuantityContainer>
-      <TextContainer>{price}</TextContainer>
-      <RemoveButtonContainer onClick={() => clearItem(cartItem)}>
-        &#10005;
-      </RemoveButtonContainer>
-    </CheckoutItemContainer>
+    <Grid container alignItems="center" spacing={2}>
+      <Grid item>
+        <img height={180} width={180} src={imageUrl} />
+      </Grid>
+      <Grid item>
+        <Typography variant="h5">{name}</Typography>
+        <Typography>
+          <Box color="#f74902">Rp.{price}</Box>
+          <Typography variant="caption">/ 1 barang @{weight} gr</Typography>
+        </Typography>
+      </Grid>
+    </Grid>
   );
 };
 

@@ -141,7 +141,7 @@ class EditAddress extends Component {
               </option>
             ))}
           </FormSelect>
-          <CustomButton> {loading ? "Loading" : "Tambah alamat"}</CustomButton>
+          <CustomButton> {loading ? "Loading" : "Ubah alamat"}</CustomButton>
         </form>
       </Container>
     );

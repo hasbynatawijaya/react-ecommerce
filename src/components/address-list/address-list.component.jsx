@@ -28,7 +28,10 @@ import {
   selectModalAddAddress,
 } from "../../redux/modal/modal.selectors";
 
-import { getUserAddressById } from "../../redux/user/user.actions";
+import {
+  getUserAddressById,
+  deleteUserAddress,
+} from "../../redux/user/user.actions";
 
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 
@@ -60,11 +63,16 @@ const AddressList = (props) => {
     modalAddAddress,
     currentUser,
     getUserAddressById,
+    deleteUserAddress,
   } = props;
 
   const handleEdit = (addressId) => {
     getUserAddressById(addressId);
     modalEditAddress();
+  };
+
+  const handleDelete = (addressId) => {
+    deleteUserAddress({ userId: currentUser.id, addressId });
   };
 
   return (
@@ -95,7 +103,7 @@ const AddressList = (props) => {
                 <IconButton onClick={() => handleEdit(val.id)}>
                   <EditIcon />
                 </IconButton>
-                <IconButton>
+                <IconButton onClick={() => handleDelete(val.id)}>
                   <DeleteIcon />
                 </IconButton>
               </CardActions>
@@ -126,6 +134,7 @@ const mapDispatchToProps = (dispatch) => ({
   modalEditAddress: () => dispatch(modalEditAddress()),
   modalAddAddress: () => dispatch(modalAddAddress()),
   getUserAddressById: (addressId) => dispatch(getUserAddressById(addressId)),
+  deleteUserAddress: (data) => dispatch(deleteUserAddress(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddressList);

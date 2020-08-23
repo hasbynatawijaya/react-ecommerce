@@ -27,11 +27,11 @@ const CartDropdown = ({ cartItems, history, dispatch }) => (
     </CartItemsContainer>
     <CartDropdownButton
       onClick={() => {
-        history.push("/checkout");
+        history.push("/cart");
         dispatch(toggleCartHidden());
       }}
     >
-      CHECKOUT
+      Lihat keranjang
     </CartDropdownButton>
   </CartDropdownContainer>
 );

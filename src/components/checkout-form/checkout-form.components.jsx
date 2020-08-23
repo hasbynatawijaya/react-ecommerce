@@ -129,8 +129,6 @@ class CheckoutForm extends Component {
       loading,
     } = this.props;
 
-    console.log(loading);
-
     return (
       <CheckoutFormContainer>
         <form onSubmit={this.handleSubmit}>

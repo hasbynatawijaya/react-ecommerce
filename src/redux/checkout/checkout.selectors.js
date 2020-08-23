@@ -56,8 +56,8 @@ export const selectItemPurchasedForExcel = createSelector(
           price: checkoutData[i].items[j].price,
           address: checkoutData[i].address,
           courier: checkoutData[i].courier,
-          city: checkoutData[i].city.city,
-          province: checkoutData[i].provinceObj.province,
+          city: checkoutData[i].city,
+          province: checkoutData[i].province,
           receiverName: checkoutData[i].name,
         });
       }

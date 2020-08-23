@@ -45,8 +45,8 @@ class SignIn extends React.Component {
 
     return (
       <SignInContainer>
-        <SignInTitle>I already have an account</SignInTitle>
-        <span>Sign in with your email and password</span>
+        <SignInTitle>Saya sudah memiliki akun</SignInTitle>
+        <span>Login dengan email dan password</span>
 
         <form onSubmit={this.handleSubmit}>
           <FormInput
@@ -66,13 +66,13 @@ class SignIn extends React.Component {
             required
           />
           <ButtonsBarContainer>
-            <CustomButton type="submit"> Sign in </CustomButton>
+            <CustomButton type="submit"> Login </CustomButton>
             <CustomButton
               type="button"
               onClick={googleSignInStart}
               isGoogleSignIn
             >
-              Sign in with Google
+              Login dengan Google
             </CustomButton>
           </ButtonsBarContainer>
         </form>

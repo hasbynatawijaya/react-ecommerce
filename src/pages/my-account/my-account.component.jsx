@@ -59,15 +59,15 @@ const MyAccount = () => {
           aria-label="simple tabs example"
         >
           <Tab label="Alamat" {...a11yProps(0)} />
-          <Tab label="Akun" {...a11yProps(1)} />
+          {/* <Tab label="Akun" {...a11yProps(1)} /> */}
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
         <AddressList />
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         Akun
-      </TabPanel>
+      </TabPanel> */}
     </div>
   );
 };

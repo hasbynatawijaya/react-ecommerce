@@ -2,6 +2,7 @@ import React from "react";
 
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
+import { withRouter } from "react-router-dom";
 
 import { Carousel } from "react-responsive-carousel";
 
@@ -25,11 +26,15 @@ const useStyles = makeStyles((theme) =>
       border: "none",
       borderRadius: "16px",
       padding: "12px 48px",
+
+      "&:hover": {
+        backgroundColor: "#f77b48",
+      },
     },
   })
 );
 
-const HomeBanner = () => {
+const HomeBanner = ({ history }) => {
   const classes = useStyles();
 
   return (
@@ -41,7 +46,11 @@ const HomeBanner = () => {
           <Typography variant="h1">Juga</Typography>
         </Box>
         <Box>
-          <Button className={classes.button} variant="outlined">
+          <Button
+            className={classes.button}
+            variant="outlined"
+            onClick={() => history.push("/shop")}
+          >
             Beli sekarang
           </Button>
         </Box>
@@ -53,4 +62,4 @@ const HomeBanner = () => {
   );
 };
 
-export default HomeBanner;
+export default withRouter(HomeBanner);

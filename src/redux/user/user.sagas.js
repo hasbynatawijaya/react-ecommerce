@@ -72,9 +72,9 @@ export function* signOut() {
   try {
     yield auth.signOut();
 
-    window.location.replace("/");
-
     yield put(signOutSuccess());
+
+    window.location.replace("/");
   } catch (error) {
     yield put(signOutFailure(error));
   }
@@ -83,6 +83,8 @@ export function* signOut() {
 export function* signUp({ payload: { email, password, displayName } }) {
   try {
     const { user } = yield auth.createUserWithEmailAndPassword(email, password);
+
+    yield auth.currentUser.sendEmailVerification();
 
     yield put(
       signUpSuccess({
@@ -158,6 +160,36 @@ export function* editUserAddress({ payload }) {
   }
 }
 
+export function* deleteUserAddress({ payload }) {
+  try {
+    yield put(loadingUserAddressAction(true));
+
+    const ref = firestore.collection("users").doc(payload.userId);
+
+    const snapshot = yield ref.get();
+    const allAddress = [...(yield snapshot.data().address)];
+
+    const selectedIndex = allAddress.findIndex(
+      (address) => address.id === payload.addressId
+    );
+
+    allAddress.splice(selectedIndex, 1);
+
+    yield ref.set(
+      {
+        address: [...allAddress],
+      },
+      { merge: true }
+    );
+
+    yield put(checkUserSession());
+    yield put(loadingUserAddressAction(false));
+  } catch (error) {
+    yield put(loadingUserAddressAction(false));
+    console.log(error);
+  }
+}
+
 export function* signInAfterSignUp({ payload: { user, additionalData } }) {
   yield getSnapShotFromUserAuth(user, additionalData);
 }
@@ -194,6 +226,10 @@ export function* onEditUserAddress() {
   yield takeLatest(userActionTypes.EDIT_USER_ADDRESS, editUserAddress);
 }
 
+export function* onDeleteUserAddress() {
+  yield takeLatest(userActionTypes.DELETE_USER_ADDRESS, deleteUserAddress);
+}
+
 export function* userSagas() {
   yield all([
     call(onGoogleSignInStart),
@@ -204,5 +240,6 @@ export function* userSagas() {
     call(onSignUpSuccess),
     call(onAdduserAddress),
     call(onEditUserAddress),
+    call(onDeleteUserAddress),
   ]);
 }

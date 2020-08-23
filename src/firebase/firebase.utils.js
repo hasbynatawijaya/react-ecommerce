@@ -38,6 +38,8 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     }
   }
 
+  // console.log(firebase.auth().currentUser);
+
   return userRef;
 };
 

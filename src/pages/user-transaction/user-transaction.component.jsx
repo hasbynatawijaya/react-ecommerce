@@ -106,7 +106,7 @@ const UserTransaction = (props) => {
             <AddressTitleText>Alamat</AddressTitleText>
             <AddressContentText>{col.address}</AddressContentText>
             <AddressContentText>
-              {col.city.city}, {col.provinceObj.province}
+              {col.city}, {col.province}
             </AddressContentText>
           </AddressContainer>
           <AddressContainer>

@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import { toastr } from "react-redux-toastr";
 
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -16,6 +17,7 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 
 import { selectCurrentUser } from "../../redux/user/user.selectors";
+import { selectCartItems } from "../../redux/cart/cart.selectors";
 
 import { addItem } from "../../redux/cart/cart.actions";
 
@@ -122,7 +124,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CollectionItem = ({ item, addItem, currentUser }) => {
+const CollectionItem = ({ item, addItem, currentUser, cartItems }) => {
+  const [disabledAddButton, setDisabledAddButton] = React.useState(false);
+
   const classes = useStyles();
   const theme = useTheme();
 
@@ -135,6 +139,37 @@ const CollectionItem = ({ item, addItem, currentUser }) => {
     description,
     isFavourite,
   } = item;
+
+  React.useEffect(() => {
+    handleCheckProductOnCart(item);
+  }, []);
+
+  const handleCheckProductOnCart = (cartItemToAdd) => {
+    const existingCartItem = cartItems.find(
+      (cartItem) => cartItem.id === cartItemToAdd.id
+    );
+
+    if (existingCartItem) {
+      for (let i = 0; i < cartItems.length; i++) {
+        if (cartItems[i].id === cartItemToAdd.id) {
+          if (cartItems[i].quantity >= parseInt(cartItemToAdd.stock)) {
+            setDisabledAddButton(true);
+            return false;
+          }
+        }
+      }
+    }
+
+    return true;
+  };
+
+  const handleAddItem = (cartItemToAdd) => {
+    const isAvailableToAdd = handleCheckProductOnCart(cartItemToAdd);
+
+    if (isAvailableToAdd) {
+      return addItem(cartItemToAdd);
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -185,11 +220,14 @@ const CollectionItem = ({ item, addItem, currentUser }) => {
             </Box>
             <Divider />
             <Button
-              onClick={() => addItem(item)}
+              onClick={() => handleAddItem(item)}
               variant="outlined"
               className={classes.addToCartButton}
+              disabled={disabledAddButton}
             >
-              tambah ke keranjang
+              {disabledAddButton
+                ? "pembelian melebihi stok"
+                : "tambahkan ke keranjang"}
             </Button>
           </div>
         </div>
@@ -235,6 +273,7 @@ const CollectionItem = ({ item, addItem, currentUser }) => {
 
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser,
+  cartItems: selectCartItems,
 });
 
 const mapDispatchToProps = (dispatch) => ({

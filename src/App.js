@@ -3,6 +3,8 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
+import { auth } from "./firebase/firebase.utils";
+
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
 
@@ -32,6 +34,7 @@ import MasterProductPages from "./pages/master-product/master-product.component"
 import Transaction from "./pages/transaction/transaction.component";
 import CheckoutComplete from "./pages/checkout-complete/checkout-complete.component";
 import MyAccount from "./pages/my-account/my-account.component";
+import CartOverviewPage from "./pages/cart-overview/cart-overview.component";
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
@@ -100,50 +103,79 @@ class App extends React.Component {
           layout={MainLayout}
           needAuth
         />
+        <RouteWithLayout
+          exact
+          path="/transaction"
+          component={UserTransactionPage}
+          layout={MainLayout}
+          needAuth={false}
+        />
+        <RouteWithLayout
+          exact
+          path="/cart"
+          component={CartOverviewPage}
+          layout={MainLayout}
+          needAuth={false}
+        />
       </>
     );
 
     return (
-      <Container maxWidth="lg">
-        <ThemeProvider>
-          <CssBaseline />
-          <Switch>
-            <RouteWithLayout
-              exact
-              path="/"
-              component={HomePage}
-              layout={MainLayout}
-              needAuth={false}
-            />
-            <RouteWithLayout
-              path="/shop"
-              component={ShopPage}
-              layout={MainLayout}
-              needAuth={false}
-            />
-            <RouteWithLayout
-              exact
-              path="/transaction"
-              component={UserTransactionPage}
-              layout={MainLayout}
-              needAuth={false}
-            />
-            <Route
-              exact
-              path="/signin"
-              render={() =>
-                this.props.currentUser ? (
-                  <Redirect to="/" />
-                ) : (
-                  <SignInAndSignUpPage />
-                )
-              }
-              needAuth={false}
-            />
-            {this.props.currentUser !== null && authRoute}
-          </Switch>
-        </ThemeProvider>
-      </Container>
+      <React.Fragment>
+        {auth.currentUser && !auth.currentUser.emailVerified && (
+          <div
+            style={{
+              width: "100%",
+              height: "80px",
+              background: "#eeccbe",
+              fontWeight: 600,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              textAlign: "center",
+            }}
+          >
+            <h4>
+              Email anda belum terverifikasi silahkan cek email anda untuk
+              melanjutkan apabila tidak menerima, klik disini
+            </h4>
+          </div>
+        )}
+
+        <Container maxWidth="lg">
+          <ThemeProvider>
+            <CssBaseline />
+            <Switch>
+              <RouteWithLayout
+                exact
+                path="/"
+                component={HomePage}
+                layout={MainLayout}
+                needAuth={false}
+              />
+              <RouteWithLayout
+                path="/shop"
+                component={ShopPage}
+                layout={MainLayout}
+                needAuth={false}
+              />
+              <Route
+                exact
+                path="/signin"
+                render={() =>
+                  this.props.currentUser ? (
+                    <Redirect to="/" />
+                  ) : (
+                    <SignInAndSignUpPage />
+                  )
+                }
+                needAuth={false}
+              />
+              {this.props.currentUser !== null && authRoute}
+            </Switch>
+          </ThemeProvider>
+        </Container>
+      </React.Fragment>
     );
   }
 }

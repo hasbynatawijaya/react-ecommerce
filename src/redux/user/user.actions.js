@@ -63,6 +63,11 @@ export const editUserAddressStart = (data) => ({
   payload: data,
 });
 
+export const deleteUserAddress = (data) => ({
+  type: UserActionTypes.DELETE_USER_ADDRESS,
+  payload: data,
+});
+
 export const loadingUserAddressAction = (isLoading) => ({
   type: UserActionTypes.LOADING_USER_ADDRESS_ACTION,
   payload: isLoading,

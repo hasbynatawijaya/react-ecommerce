@@ -27,14 +27,22 @@ export function* checkout({ payload }) {
   try {
     yield put(loadingCheckoutAction(true));
     yield firestore.collection("transactions").doc(uuid()).set(payload);
-
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Sukses", "Berhasil membuat pesanan");
     yield put(clearCart());
+
+    //send email
+    // window.emailjs.send("gmail", "create_order", {
+    //   user_email: payload.email,
+    //   user_name: payload.name,
+    //   total_price: payload.totalPrice,
+    // });
+
     setTimeout(() => {
       window.location.replace("/checkout/complete");
     }, 1000);
   } catch (error) {
+    yield put(loadingCheckoutAction(false));
     console.log(error);
   }
 }
@@ -160,6 +168,9 @@ export function* submitServiceNumber({ payload }) {
       .collection("transactions")
       .doc(transactionId);
 
+    const transactionSnapshot = yield transcationRef.get();
+    const transactionItems = yield transactionSnapshot.data().items;
+
     yield transcationRef.set(
       {
         serviceNumber: serviceNumberValue,
@@ -172,6 +183,34 @@ export function* submitServiceNumber({ payload }) {
     yield toastr.success("Sukses", "Upload isi nomor resi");
     yield put(modalUploadServiceNumber());
     yield put(fetchCheckoutDataStart({ status, date }));
+
+    //update stock
+    const ref = firestore
+      .collection("collections")
+      .doc("f3993978-178a-4141-b54b-61a55b4f444c");
+    const snapshot = yield ref.get();
+
+    const collectionItems = yield snapshot.data().items;
+
+    const updatedCollectionItems = [...collectionItems];
+
+    for (let i = 0; i < updatedCollectionItems.length; i++) {
+      const currentCollection = updatedCollectionItems[i];
+
+      const matchedIndex = transactionItems.findIndex((i) => {
+        return i.id === currentCollection.id;
+      });
+
+      if (matchedIndex >= 0) {
+        updatedCollectionItems[i].stock =
+          +updatedCollectionItems[matchedIndex].stock -
+          transactionItems[matchedIndex].quantity;
+      }
+    }
+
+    yield ref.update({
+      items: updatedCollectionItems,
+    });
   } catch (error) {
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Error", error);

@@ -13,8 +13,7 @@ import {
 } from "./shipping.actions";
 
 const instance = axios.create({
-  baseURL:
-    "https://cors-anywhere.herokuapp.com/https://api.rajaongkir.com/starter/",
+  baseURL: "/starter/",
   //   timeout: 10000,
   headers: { key: "b826d90eba7378d6039ea64e996f11fc" },
 });
