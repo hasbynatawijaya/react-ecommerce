@@ -29,6 +29,7 @@ import {
   selectModalAddProduct,
   selectModalEditProduct,
 } from "../../redux/modal/modal.selectors";
+import CustomModal from "../custom-modal/custom-modal.component";
 
 const MasterProduct = (props) => {
   const [tableData, setTableData] = React.useState([]);
@@ -121,23 +122,27 @@ const MasterProduct = (props) => {
         ))}
       </FormSelect>
       <Table
-        tableHead={[
-          "Photo",
-          "Nama Produk",
-          "Harga",
-          "Berat (gram)",
-          "Aksi",
-        ]}
+        tableHead={["Photo", "Nama Produk", "Harga", "Berat (gram)", "Aksi"]}
         tableData={tableData}
       />
-      <Modal isOpen={isOpenModalAddProduct} contentLabel="Example Modal">
-        <button onClick={() => modalAddProduct()}>close add</button>
+      <CustomModal
+        open={isOpenModalAddProduct}
+        handleClose={() => modalAddProduct()}
+        title="Tambah produk"
+        fullWidth
+        maxWidth="lg"
+      >
         <AddProduct />
-      </Modal>
-      <Modal isOpen={isOpenModalEditProduct} contentLabel="Example Modal">
-        <button onClick={handleModalEdit}>close edit</button>
+      </CustomModal>
+      <CustomModal
+        open={isOpenModalEditProduct}
+        handleClose={handleModalEdit}
+        title="Edit produk"
+        fullWidth
+        maxWidth="lg"
+      >
         <EditProduct />
-      </Modal>
+      </CustomModal>
     </div>
   );
 };

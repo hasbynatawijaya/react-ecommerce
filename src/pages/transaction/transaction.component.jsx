@@ -39,6 +39,7 @@ import {
 } from "../../redux/checkout/checkout.selectors";
 import { selectModalServiceNumber } from "../../redux/modal/modal.selectors";
 import ServiceNumber from "../../components/service-number/service-number.component";
+import CustomModal from "../../components/custom-modal/custom-modal.component";
 
 const Transaction = (props) => {
   const [tableData, setTableData] = React.useState([]);
@@ -48,6 +49,7 @@ const Transaction = (props) => {
     status: "choose",
     date: [new Date(), new Date()],
   });
+  const [selectedTransaction, setSelectedTransaction] = React.useState(null);
 
   const {
     checkoutData,
@@ -57,9 +59,10 @@ const Transaction = (props) => {
     rejectTransaction,
   } = props;
 
-  const handleModalServiceNumber = (serviceNumber, transactionId) => {
+  const handleModalServiceNumber = (serviceNumber, transactionId, detail) => {
     modalUploadServiceNumber();
 
+    setSelectedTransaction(detail);
     setServiceNumber(serviceNumber);
     setTransactionId(transactionId);
   };
@@ -165,7 +168,7 @@ const Transaction = (props) => {
             onClick={() =>
               col.status === "process" || col.status === "rejected"
                 ? null
-                : handleModalServiceNumber(col.serviceNumber, col.id)
+                : handleModalServiceNumber(col.serviceNumber, col.id, col)
             }
           >
             {col.status === "accepted" ? "Edit No.Resi" : "Setujui Pesanan"}
@@ -181,7 +184,11 @@ const Transaction = (props) => {
             onClick={() =>
               col.status === "accepted" || col.status === "rejected"
                 ? null
-                : rejectTransaction({ transactionId: col.id, ...filterPayload })
+                : rejectTransaction({
+                    transactionId: col.id,
+                    ...filterPayload,
+                    detail: col,
+                  })
             }
           >
             {loading ? "loading" : "Tolak Pesanan"}
@@ -210,14 +217,18 @@ const Transaction = (props) => {
         ]}
         tableData={tableData}
       />
-      <Modal isOpen={isOpenModalServiceNumber}>
-        <button onClick={modalUploadServiceNumber}>close</button>
+      <CustomModal
+        open={isOpenModalServiceNumber}
+        handleClose={modalUploadServiceNumber}
+        title="Masukan no.resi"
+      >
         <ServiceNumber
           serviceNumber={serviceNumber}
           transactionId={transactionId}
           filterPayload={filterPayload}
+          detail={selectedTransaction}
         />
-      </Modal>
+      </CustomModal>
     </div>
   );
 };

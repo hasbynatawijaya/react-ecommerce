@@ -49,6 +49,7 @@ import FormLabel from "@material-ui/core/FormLabel";
 import Select from "@material-ui/core/Select";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
+import CustomModal from "../../components/custom-modal/custom-modal.component";
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -390,15 +391,16 @@ const CheckoutPage = ({
           </Grid>
         </Grid>
       </Grid>
-      <Modal
-        isOpen={openModal}
+
+      <CustomModal
+        open={openModal}
         contentLabel="Example Modal"
         style={{ zIndex: 99999 }}
+        handleClose={() => setOpenModal(false)}
+        title="Pilih alamat pengiriman"
+        fullWidth
+        maxWidth="lg"
       >
-        <button onClick={() => setOpenModal(false)}>close</button>
-        <Box mb={4} mt={4}>
-          <Typography variant="h5">Pilih alamat pengiriman</Typography>
-        </Box>
         {currentUser.address.length === 0 && (
           <Box>
             <Typography>Alamat pengiriman belum di tambahkan</Typography>
@@ -434,7 +436,7 @@ const CheckoutPage = ({
             </Grid>
           </Grid>
         ))}
-      </Modal>
+      </CustomModal>
     </div>
   );
 };

@@ -24,6 +24,7 @@ import {
   selectModalAddCategory,
   selectModalEditCategory,
 } from "../../redux/modal/modal.selectors";
+import CustomModal from "../../components/custom-modal/custom-modal.component";
 
 const Category = (props) => {
   const [tableData, setTableData] = React.useState([]);
@@ -80,14 +81,24 @@ const Category = (props) => {
         <Button onClick={() => modalAddCategory()}>Tambah Kategori</Button>
       </CategoryHeader>
       <Table tableHead={["Kategori", "Photo", "Aksi"]} tableData={tableData} />
-      <Modal isOpen={isOpenModalEditCategory} contentLabel="Example Modal">
-        <button onClick={handleModalEdit}>close</button>
-        <EditCategory />
-      </Modal>
-      <Modal isOpen={isOpenModalAddCategory} contentLabel="Example Modal">
-        <button onClick={() => modalAddCategory()}>close</button>
+      <CustomModal
+        open={isOpenModalAddCategory}
+        handleClose={() => modalAddCategory()}
+        fullWidth
+        maxWidth="lg"
+        title="Tambah kategori"
+      >
         <AddCategory />
-      </Modal>
+      </CustomModal>
+      <CustomModal
+        open={isOpenModalEditCategory}
+        handleClose={() => modalEditCategory()}
+        fullWidth
+        maxWidth="lg"
+        title="Tambah kategori"
+      >
+        <EditCategory />
+      </CustomModal>
     </div>
   );
 };

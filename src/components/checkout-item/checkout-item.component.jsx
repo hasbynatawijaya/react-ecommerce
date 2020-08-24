@@ -21,8 +21,10 @@ const CheckoutItem = ({ cartItem }) => {
       <Grid item>
         <Typography variant="h5">{name}</Typography>
         <Typography>
-          <Box color="#f74902">Rp.{price}</Box>
-          <Typography variant="caption">/ 1 barang @{weight} gr</Typography>
+          <Box color="#f74902">Rp.{price * quantity}</Box>
+          <Typography variant="caption">
+            {quantity} barang @{weight} gr
+          </Typography>
         </Typography>
       </Grid>
     </Grid>

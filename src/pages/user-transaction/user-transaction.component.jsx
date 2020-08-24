@@ -34,6 +34,7 @@ import { modalUploadTransferProof } from "../../redux/modal/modal.actions";
 import { selectCheckoutDataByUserId } from "../../redux/checkout/checkout.selectors";
 import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { selectModalUploadTransferProof } from "../../redux/modal/modal.selectors";
+import CustomModal from "../../components/custom-modal/custom-modal.component";
 
 const UserTransaction = (props) => {
   const [tableData, setTableData] = React.useState([]);
@@ -168,13 +169,25 @@ const UserTransaction = (props) => {
         tableHead={["Barang", "Pengiriman", "Kurir", "Total Harga", "Status"]}
         tableData={tableData}
       />
-      <Modal isOpen={isOpenModalUploadTransferProof}>
+      {/* <Modal isOpen={isOpenModalUploadTransferProof}>
         <button onClick={modalUploadTransferProof}>close</button>
         <UploadTransferProof
           transactionId={transactionId}
           filterPayload={filterPayload}
         />
-      </Modal>
+      </Modal> */}
+      <CustomModal
+        fullWidth={false}
+        maxWidth={"sm"}
+        open={isOpenModalUploadTransferProof}
+        handleClose={modalUploadTransferProof}
+        title="Upload bukti transfer untuk transaksi anda"
+      >
+        <UploadTransferProof
+          transactionId={transactionId}
+          filterPayload={filterPayload}
+        />
+      </CustomModal>
     </div>
   );
 };

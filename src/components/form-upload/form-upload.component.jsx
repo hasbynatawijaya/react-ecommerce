@@ -7,12 +7,17 @@ import {
 } from "./form-upload.styles";
 
 const FormUpload = ({ handleChange, children, imageUrl, ...props }) => {
+  console.log(imageUrl);
   return (
     <FormUploadContainer>
       <FormUploadImageContainer
         onClick={(e) => document.getElementById("hiddenFileInput").click()}
       >
-        <FromUploadImage src={imageUrl} />
+        {imageUrl ? (
+          <FromUploadImage src={imageUrl} />
+        ) : (
+          <h4>Klik disini untuk menambahkan gambar</h4>
+        )}
       </FormUploadImageContainer>
       <input
         type="file"

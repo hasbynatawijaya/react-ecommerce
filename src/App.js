@@ -120,27 +120,31 @@ class App extends React.Component {
       </>
     );
 
+    console.log(this.props.currentUser);
+
     return (
       <React.Fragment>
-        {auth.currentUser && !auth.currentUser.emailVerified && (
-          <div
-            style={{
-              width: "100%",
-              height: "80px",
-              background: "#eeccbe",
-              fontWeight: 600,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              textAlign: "center",
-            }}
-          >
-            <h4>
-              Email anda belum terverifikasi silahkan cek email anda untuk
-              melanjutkan apabila tidak menerima, klik disini
-            </h4>
-          </div>
-        )}
+        {auth.currentUser &&
+          !auth.currentUser.emailVerified &&
+          this.props.currentUser.role === "user" && (
+            <div
+              style={{
+                width: "100%",
+                height: "80px",
+                background: "#eeccbe",
+                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                textAlign: "center",
+              }}
+            >
+              <h4>
+                Email anda belum terverifikasi silahkan cek email anda untuk
+                melanjutkan
+              </h4>
+            </div>
+          )}
 
         <Container maxWidth="lg">
           <ThemeProvider>

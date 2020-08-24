@@ -31,12 +31,20 @@ export function* checkout({ payload }) {
     yield toastr.success("Sukses", "Berhasil membuat pesanan");
     yield put(clearCart());
 
-    //send email
-    // window.emailjs.send("gmail", "create_order", {
-    //   user_email: payload.email,
-    //   user_name: payload.name,
-    //   total_price: payload.totalPrice,
-    // });
+    // send email
+    window.emailjs.send("gmail", "create_order", {
+      user_email: payload.email,
+      subject: "Pesanan anda berhasil dibuat",
+      user_name: payload.name,
+      title: "Pesanan anda berhasil dibuat",
+      reason: "Dengan nominal sebesar",
+      total_price: `Rp.${payload.totalPrice}`,
+      make_payment: "Silahkan lakukan pembayaran ke nomor rekening:",
+      bank_account_name: "Bank Central Asia (BCA)",
+      bank_account_number: "0841778388",
+      message_footer:
+        "Setelah melakukan pembayaran harap upload bukti transfer di halaman transaksi agar pesanan dapat kami proses",
+    });
 
     setTimeout(() => {
       window.location.replace("/checkout/complete");
@@ -159,8 +167,8 @@ export function* uploadTransferProof({ payload }) {
 }
 
 export function* submitServiceNumber({ payload }) {
-  const { transactionId, serviceNumberValue, status, date } = payload;
-
+  const { transactionId, serviceNumberValue, status, date, detail } = payload;
+  console.log(payload);
   try {
     yield put(loadingCheckoutAction(true));
 
@@ -211,14 +219,29 @@ export function* submitServiceNumber({ payload }) {
     yield ref.update({
       items: updatedCollectionItems,
     });
+
+    //SEND EMAIL
+    window.emailjs.send("gmail", "create_order", {
+      user_email: detail.email,
+      subject: "Pesanan anda sudah dikirim",
+      user_name: detail.name,
+      title: "Pesanan sudah dikirim",
+      reason: "Pesanan di kirim oleh:",
+      make_payment: `${detail.courier.toUpperCase()} - ${
+        detail.shippingPackage
+      }`,
+      bank_name: `No.Resi ${serviceNumberValue}`,
+      message_footer: "Terima kasih sudah berbelanja di toko kami",
+    });
   } catch (error) {
     yield put(loadingCheckoutAction(false));
-    yield toastr.success("Error", error);
+    console.log(error);
+    // yield toastr.success("Error", error);
   }
 }
 
 export function* rejectTransaction({ payload }) {
-  const { transactionId, status, date } = payload;
+  const { transactionId, status, date, detail } = payload;
   try {
     yield put(loadingCheckoutAction(true));
 
@@ -236,6 +259,16 @@ export function* rejectTransaction({ payload }) {
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Sukses", "Transaksi ditolak");
     yield put(fetchCheckoutDataStart({ status, date }));
+
+    window.emailjs.send("gmail", "create_order", {
+      user_email: detail.email,
+      subject: "Pesanan anda ditolak",
+      user_name: detail.name,
+      title: "Pesanan anda ditolak",
+      reason:
+        "Pesanan anda tidak dapat kami proses karena stok barang tidak tersedia",
+      message_footer: "Kami mohon maaf atas ketidak nyamanan ini,",
+    });
   } catch (error) {
     yield put(loadingCheckoutAction(false));
     yield toastr.success("Error", error);

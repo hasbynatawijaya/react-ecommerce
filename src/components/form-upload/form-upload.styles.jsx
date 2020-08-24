@@ -10,6 +10,7 @@ export const FormUploadImageContainer = styled.div`
   padding: 10px;
   border: 4px solid grey;
   cursor: pointer;
+  text-align: center;
 `;
 
 export const FromUploadImage = styled.img`

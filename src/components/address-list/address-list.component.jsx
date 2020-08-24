@@ -34,6 +34,7 @@ import {
 } from "../../redux/user/user.actions";
 
 import { selectCurrentUser } from "../../redux/user/user.selectors";
+import CustomModal from "../custom-modal/custom-modal.component";
 
 const useStyles = makeStyles({
   root: {
@@ -112,14 +113,26 @@ const AddressList = (props) => {
         ))}
       </Grid>
 
-      <Modal isOpen={isModalAddAddress} contentLabel="Example Modal">
-        <button onClick={() => modalAddAddress()}>close add</button>
+      <CustomModal
+        fullWidth
+        maxWidth="lg"
+        open={isModalAddAddress}
+        handleClose={() => modalAddAddress()}
+        maxWidth="lg"
+        title="Tambah alamat pengiriman"
+      >
         <AddAddress currentUser={currentUser} />
-      </Modal>
-      <Modal isOpen={isModalEditAddress} contentLabel="Example Modal">
-        <button onClick={() => modalEditAddress()}>close edit</button>
+      </CustomModal>
+      <CustomModal
+        fullWidth
+        maxWidth="lg"
+        open={isModalEditAddress}
+        handleClose={() => modalEditAddress()}
+        maxWidth="lg"
+        title="Tambah alamat pengiriman"
+      >
         <EditAddress currentUser={currentUser} />
-      </Modal>
+      </CustomModal>
     </div>
   );
 };
